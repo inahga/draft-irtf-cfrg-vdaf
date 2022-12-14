@@ -26,3 +26,4 @@ test: pyfiles
 	sage vdaf.sage
 	sage vdaf_prio3.sage
 	sage vdaf_poplar1.sage
+	sage discrete_hist.sage

@@ -557,7 +557,7 @@ class Histogram(Valid):
 
     @classmethod
     def test_vec_set_type_param(cls, test_vec):
-        test_vec['buckets'] = list(map(lambda x: int(x), cls.buckets))
+        test_vec['buckets'] = list(map(lambda x: str(x), cls.buckets)) # XXX
         return 'buckets'
 
 

@@ -134,7 +134,7 @@ def run_vdaf(Vdaf,
     for (nonce, measurement) in zip(nonces, measurements):
         # REMOVE ME
         prep_test_vec = {
-            'measurement': int(measurement),
+            'measurement': str(measurement), # XXX
             'nonce': nonce.hex(),
             'public_share': None, # set below
             'input_shares': [],
