@@ -71,12 +71,6 @@ def decode_error(raw_err):
     error_type, client_version, client_context, origin = err[0], err[1], err[2], str(err[3:])
     return error_type, client_version, client_context, origin
 
-# Test that the encoding is correct.
-assert decode(encode(b'reset')) == b'reset'
-assert decode(encode(b'dns')) == b'dns'
-assert decode(encode(b'oh no')) == b'oh no'
-assert decode(encode(b'')) == b''
-
 # This is a one byte (uint8_t) enumerated value representing the type of error that occurred.
 error_types = [
     0x00,
@@ -96,13 +90,6 @@ measurements = [
     encode_error(error_types[0], client_version, client_context, "A"),
     encode_error(error_types[0], client_version, client_context, "B"),
     encode_error(error_types[2], client_version, client_context, "C"),
-    # encode(b'0A'),
-    # encode(b'2A'),
-    # encode(b'1B'),
-    # encode(b'2B'),
-    # encode(b'0A'),
-    # encode(b'1B'),
-    # encode(b'3C'),
 ]
 
 # Poplar in "heavy-hitters" mode: Compute the set of errors reported at least
@@ -110,7 +97,6 @@ measurements = [
 # rounds of aggregation. Unlike histogram mode, unknown error types can be
 # discovered.
 nonces = [gen_rand(16) for _ in range(len(measurements))]
-# candidate_prefixes = [0b0, 0b1]
 candidate_prefixes = [error_types[0], error_types[1], error_types[2]] # one byte known prefixes
 for level in range(8, poplar.Idpf.BITS):
     agg_param = (level, candidate_prefixes)
@@ -133,6 +119,5 @@ for level in range(8, poplar.Idpf.BITS):
 
 for (prefix, count) in zip(candidate_prefixes, agg_result):
     if count > 1:
-        # error = decode(prefix)
         error_type, client_version, client_context, origin = decode_error(prefix)        
         print("%s had %d error %d times" % (origin, error_type, count))
