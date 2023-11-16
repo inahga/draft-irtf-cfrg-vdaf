@@ -5,12 +5,12 @@
 CFRG                                                        R. L. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                                   D. Cook
-Expires: 18 May 2024                                                ISRG
+Expires: 19 May 2024                                                ISRG
                                                                C. Patton
                                                               Cloudflare
                                                            P. Schoppmann
                                                                   Google
-                                                        15 November 2023
+                                                        16 November 2023
 
 
               Verifiable Distributed Aggregation Functions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 May 2024.
+   This Internet-Draft will expire on 19 May 2024.
 
 Copyright Notice
 
@@ -2791,7 +2791,7 @@ class XofFixedKeyAes128(Xof):
         Prio3.Flp.Field,
         k_share,
         Prio3.domain_separation_tag(USAGE_PROOF_SHARE),
-        byte(agg_id),
+        byte(Prio3.PROOFS) + byte(agg_id),
         Prio3.Flp.PROOF_LEN * Prio3.PROOFS,
     )
 
@@ -2807,7 +2807,7 @@ class XofFixedKeyAes128(Xof):
         Prio3.Flp.Field,
         k_prove,
         Prio3.domain_separation_tag(USAGE_PROVE_RANDOMNESS),
-        b'',
+        byte(Prio3.PROOFS),
         Prio3.Flp.PROVE_RAND_LEN * Prio3.PROOFS,
     )
 
@@ -2816,7 +2816,7 @@ class XofFixedKeyAes128(Xof):
         Prio3.Flp.Field,
         verify_key,
         Prio3.domain_separation_tag(USAGE_QUERY_RANDOMNESS),
-        nonce,
+        byte(Prio3.PROOFS) + nonce,
         Prio3.Flp.QUERY_RAND_LEN * Prio3.PROOFS,
     )
 
@@ -2837,12 +2837,11 @@ class XofFixedKeyAes128(Xof):
 
   def joint_rands(Prio3, k_joint_rand_seed):
     """Derive the joint randomness from its seed."""
-    binder = b'' if Prio3.PROOFS == 1 else byte(Prio3.PROOFS)
     return Prio3.Xof.expand_into_vec(
         Prio3.Flp.Field,
         k_joint_rand_seed,
         Prio3.domain_separation_tag(USAGE_JOINT_RANDOMNESS),
-        binder,
+        byte(Prio3.PROOFS),
         Prio3.Flp.JOINT_RAND_LEN * Prio3.PROOFS,
     )
 
