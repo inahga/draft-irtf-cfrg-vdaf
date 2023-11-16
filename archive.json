@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-14T00:41:03.755606+00:00",
+  "timestamp": "2023-11-16T00:42:34.747800+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4473,7 +4473,7 @@
       "id": "I_kwDOGKuqOc5zi8Fk",
       "title": "Replace SHAKE128 with TurboSHAKE128",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/299",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -4485,8 +4485,8 @@
       ],
       "body": "As discussed on the CFRG mailing list: https://mailarchive.ietf.org/arch/msg/cfrg/zzpG6CWQHG2hvQuzmfmkZcZ2AzM/",
       "createdAt": "2023-10-11T19:10:06Z",
-      "updatedAt": "2023-10-25T20:23:18Z",
-      "closedAt": null,
+      "updatedAt": "2023-11-15T14:43:06Z",
+      "closedAt": "2023-11-15T14:43:06Z",
       "comments": []
     },
     {
@@ -4598,7 +4598,7 @@
       "id": "I_kwDOGKuqOc5099kE",
       "title": "Authors list doesn't render properly for some informative references",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/307",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -4607,8 +4607,8 @@
       ],
       "body": "E.g., [GKWY20, GKWWY20]",
       "createdAt": "2023-10-25T22:47:02Z",
-      "updatedAt": "2023-10-25T22:47:02Z",
-      "closedAt": null,
+      "updatedAt": "2023-11-14T16:30:43Z",
+      "closedAt": "2023-11-14T16:30:43Z",
       "comments": []
     }
   ],
@@ -25689,7 +25689,7 @@
       "id": "PR_kwDOGKuqOc5fAtZw",
       "title": "Replace SHAKE128 with TurboSHAKE128",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/308",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -25698,17 +25698,19 @@
       ],
       "body": "Closes #299.\r\n\r\nThe reference code uses the reference implementation of TurboSHAKE128. This code is unoptimized, so care is needed to ensure our tests run in a reasonable amount of time.\r\n\r\nEach time `XofTurboShake128` is constructed we call `TurboSHAKE128()` once and fill a buffer with the output stream. The size of the buffer is a constant, `MAX_XOF_OUT_STREAM_BYTES`, chosen to be sufficiently long for every test that we have. So that we don't have to make this value too large, some of tests in `vdaf_poplar1.py` have been modified.",
       "createdAt": "2023-11-09T09:14:48Z",
-      "updatedAt": "2023-11-13T22:19:40Z",
+      "updatedAt": "2023-11-15T14:43:06Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "ccbb6a0080255b0dbd28630bfa8b8d522b99fd84",
       "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "headRefName": "cjpatton/299",
       "headRefOid": "c0131a26073c6da2acb159165824c43f013835b0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-11-15T14:43:05Z",
+      "mergedAt": "2023-11-15T14:43:05Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "fd7a2dc4993babbf3acffc7d498cd7925890064b"
+      },
       "comments": [
         {
           "author": "divergentdave",
@@ -25828,7 +25830,7 @@
       ],
       "body": "Partially addresses #177.\r\n\r\nThe query randomness is correlated for different values of `Prio3.PROOFS`. To provide defense in depth in case the same verification key is used for different versions, prepend the binder with `bytes(Prio3.PROOFS)`.\r\n\r\nFor consistency, do the same for the prove randomness and each Helper's share of the proofs. Also, do the same for joint randomness in case `Prio3.PROOFS == 1`.",
       "createdAt": "2023-11-10T12:06:21Z",
-      "updatedAt": "2023-11-10T23:48:02Z",
+      "updatedAt": "2023-11-15T23:01:06Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "ccbb6a0080255b0dbd28630bfa8b8d522b99fd84",
@@ -25846,6 +25848,13 @@
           "body": "@divergentdave please let me know if you'd be happy implementing multi-proof mode in libprio-rs. (Previously it was optional, but this PR would make this feature wire breaking.)\r\n\r\n@albertpl please review as well and make sure you're happy.",
           "createdAt": "2023-11-10T12:07:57Z",
           "updatedAt": "2023-11-10T12:07:57Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Good catch!\r\n> \r\n> So this change would break some of the Prio3 related test vectors , right? If we generate test vectors with `PROOFS=1`, it wouldn't be the same again. Is that a problem? Shall we document this?\r\n\r\nYes, we'll break the test vectors, but we will break the test vectors anyway in the next version (when we bump `VERSION`). All we need to do is re-generate them, so this is not a problem. The break will be documented in the Change Log section of the draft.\r\n\r\n> Wait. So `wire change` is for this purpose?\r\n\r\nYes.\r\n",
+          "createdAt": "2023-11-14T17:36:11Z",
+          "updatedAt": "2023-11-14T17:36:11Z"
         }
       ],
       "reviews": [
@@ -25868,6 +25877,74 @@
               "updatedAt": "2023-11-10T23:45:35Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5nLKc0",
+          "commit": {
+            "abbreviatedOid": "bdf1354"
+          },
+          "author": "albertpl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Thank you for catching this.",
+          "createdAt": "2023-11-14T23:12:26Z",
+          "updatedAt": "2023-11-14T23:12:26Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5nTl7n",
+          "commit": {
+            "abbreviatedOid": "bdf1354"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM. We can implement it in libprio-rs too. I figure the main thing we'll have to watch out for is performance regressions if bound checks stop being elided, but we can address that with appropriate use of iterators.",
+          "createdAt": "2023-11-15T23:01:06Z",
+          "updatedAt": "2023-11-15T23:01:06Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 310,
+      "id": "PR_kwDOGKuqOc5fW3S-",
+      "title": "Fix metadata of informative references",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/310",
+      "state": "MERGED",
+      "author": "divergentdave",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #307. I noticed the following error messages when running `make`:\r\n\r\n```\r\n*** attributes left {\"authors\"=>[{\"ins\"=>\"C. Guo\"}, {\"ins\"=>\"J. Katz\"}, {\"ins\"=>\"X. Wang\"}, {\"ins\"=>\"C. Weng\"}, {\"ins\"=>\"Y. Yu\"}]}!\r\n*** attributes left {\"authors\"=>[{\"ins\"=>\"C. Guo\"}, {\"ins\"=>\"J. Katz\"}, {\"ins\"=>\"X. Wang\"}, {\"ins\"=>\"Y. Yu\"}]}!\r\n```",
+      "createdAt": "2023-11-14T00:41:57Z",
+      "updatedAt": "2023-11-14T16:30:45Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "ccbb6a0080255b0dbd28630bfa8b8d522b99fd84",
+      "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "headRefName": "david/fix-reference-author",
+      "headRefOid": "1da7ee5b7a0c8bf97caf2f2a56e01c7123173b0b",
+      "closedAt": "2023-11-14T16:30:42Z",
+      "mergedAt": "2023-11-14T16:30:42Z",
+      "mergedBy": "divergentdave",
+      "mergeCommit": {
+        "oid": "016cf0194c5f827ed36f56a8cd02ac68b2915603"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5nIIqL",
+          "commit": {
+            "abbreviatedOid": "1da7ee5"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-14T16:29:56Z",
+          "updatedAt": "2023-11-14T16:29:56Z",
+          "comments": []
         }
       ]
     }
