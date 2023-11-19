@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-16T00:42:34.747800+00:00",
+  "timestamp": "2023-11-19T00:45:35.967767+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -2768,19 +2768,20 @@
       "id": "I_kwDOGKuqOc5fl_-q",
       "title": "Prio3: Consider using a smaller field and re-running the proof verification multiple times",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/177",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
         "albertpl"
       ],
       "labels": [
-        "feature"
+        "feature",
+        "wire change"
       ],
       "body": "This would trade communication cost for CPU time.",
       "createdAt": "2023-02-28T20:55:36Z",
-      "updatedAt": "2023-10-24T18:24:20Z",
-      "closedAt": null,
+      "updatedAt": "2023-11-16T14:36:53Z",
+      "closedAt": "2023-11-16T14:36:52Z",
       "comments": [
         {
           "author": "divergentdave",
@@ -2998,6 +2999,13 @@
           "body": "I have aligned the draft with the POC. [Here](https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/305#pullrequestreview-1695611696) is the PR.",
           "createdAt": "2023-10-24T18:24:19Z",
           "updatedAt": "2023-10-24T18:24:19Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We've implemented the core feature; all that's left here is to provide guidance in the draft for choosing the parameters. I've opened a new issue to focus on this remaining work and am closing this issue.",
+          "createdAt": "2023-11-16T14:36:52Z",
+          "updatedAt": "2023-11-16T14:36:52Z"
         }
       ]
     },
@@ -4026,13 +4034,12 @@
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
-        "feature",
         "wire change",
-        "needs security analysis"
+        "idea"
       ],
       "body": "While looking at #258, I was considering how one might implement the Prio2 or Prio3CountVec AFE while using Prio3 without joint randomness. No joint randomness means we can't use random linear combinations. Thus, I think we'd be left with taking the conjunction of multiple range check sub-circuits by raising each sub-circuit output to the power $p-1$, which would be pretty expensive. (I think you'd have to split the exponentiation into multiple gadgets for it to be feasible)\r\n\r\nThis conjunction could be avoided entirely if we let the circuit output a vector instead of a single field element, and require that it be equal to $\\vec{0}$ instead of $0$. Circuits that take advantage of such a change would have a bigger verifier message, but it would give us more power/expressiveness without joint randomness.\r\n\r\nI'm not sure if this change is actually worth making in the document, but I figure it would be a useful counterfactual in Prio2 vs. Prio3 benchmark conversations, and in the broader joint randomness discussion.",
       "createdAt": "2023-07-11T17:35:49Z",
-      "updatedAt": "2023-08-17T10:42:16Z",
+      "updatedAt": "2023-11-16T14:42:48Z",
       "closedAt": null,
       "comments": [
         {
@@ -4275,7 +4282,7 @@
       "id": "I_kwDOGKuqOc5vAK80",
       "title": "Consider using SHA-3, not SHAKE128, for computing the fixed key in PrgFixedKeyAes128.",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/286",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -4284,9 +4291,24 @@
       ],
       "body": "              (For consideration in a follow-up PR.) @schoppmp We might go with plain SHA-3 in order instead of SHAKE128 since the output length is fixed.\r\n\r\n_Originally posted by @cjpatton in https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/285#discussion_r1300803021_\r\n            ",
       "createdAt": "2023-08-22T23:08:30Z",
-      "updatedAt": "2023-10-17T01:20:20Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2023-11-16T14:38:41Z",
+      "closedAt": "2023-11-16T14:38:41Z",
+      "comments": [
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We could also consider doing the same for the joint randomness computation in Prio3.",
+          "createdAt": "2023-11-16T14:37:35Z",
+          "updatedAt": "2023-11-16T14:37:35Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The editors discussed this and are not enthusiastic about making this change at this time. We agree that it's nice to have a single object, `Xof`, for multiple purposes, even if doing so is slightly inefficient",
+          "createdAt": "2023-11-16T14:38:41Z",
+          "updatedAt": "2023-11-16T14:38:41Z"
+        }
+      ]
     },
     {
       "number": 287,
@@ -4301,11 +4323,11 @@
       ],
       "labels": [
         "wire change",
-        "ietf118"
+        "idea"
       ],
       "body": "Section 4.5 of [Samplable Anonymous Aggregation for Private Federated Data Analysis](https://arxiv.org/pdf/2307.15017.pdf) notes that it's possible to efficiently validate that a vector consists of zeros and ones, with at most some constant number of ones. This could be done by generalizing Prio3Histogram. (Open question: does this belong in this document or a separate one?) Here's how I'd implement this:\r\n\r\n* The parameters would be the length, $n$, the chunk length, and the maximum number of ones, $m$.\r\n* Input length would be $n+\\left\\lfloor{log_2(m)}\\right\\rfloor+1$. Let $l_m=\\left\\lfloor{log_2(m)}\\right\\rfloor+1$, the number of bits needed to represent $m$.\r\n* Encoding: The first $n$ field elements are just projected measurement values. Let $c=2^{l_m}-1-m$, a constant offset to let us achieve the sum limit we want. Then, for input values $x_i$, compute $c+\\sum_i{x_i}$, encode it as a bit vector, and append it to the encoded measurement.\r\n* Truncation: Take the first $n$ elements.\r\n* Decoding: $id$\r\n* Validity circuit: Evaluate the range check polynomial $x(x-1)$ on all `INPUT_LEN` elements, and combine the results in a random linear combination (using the parallel sum optimization). Separately, evaluate the following, where $x_i$ are the measurement values from the encoded measurement, and $s_j$ are the bits of the $c+\\sum_i{x_i}$ from the encoded measurement. $$c + \\sum_{i=0}^{n-1} {x_i} - \\sum_{j=0}^{l_m} {2^j s_j}$$ Add the range check and sum check intermediate values together in another random linear combination, and return the result.",
       "createdAt": "2023-08-23T20:00:42Z",
-      "updatedAt": "2023-10-26T00:24:13Z",
+      "updatedAt": "2023-11-16T14:41:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -4570,11 +4592,11 @@
       "assignees": [],
       "labels": [
         "wire change",
-        "ietf118"
+        "idea"
       ],
       "body": "In Prio3Sum and Prio3SumVec we do a simple $[0, 2^k)$ range check by encoding the integer as a $k$-bit string and checking each bit is $0$ or $1$. In #287 we devised a simple strategy for generalizing this check to $[0, C)$ for any $C > 0$, even if $C$ is not a power of $2$. What's more, this check is concretely efficient in that it doesn't change the input length or the number of gadget calls. (The affine part of the computation is a bit more complex.)\r\n\r\nCould we, and would it be worth it to, do the same for Prio3Sum and Prio3SumVec? It seems to me this would be a valuable improvement.\r\n\r\ncc/ @divergentdave, @junyechen1996 ",
       "createdAt": "2023-10-25T21:43:29Z",
-      "updatedAt": "2023-10-25T22:35:25Z",
+      "updatedAt": "2023-11-16T14:40:45Z",
       "closedAt": null,
       "comments": [
         {
@@ -4609,6 +4631,38 @@
       "createdAt": "2023-10-25T22:47:02Z",
       "updatedAt": "2023-11-14T16:30:43Z",
       "closedAt": "2023-11-14T16:30:43Z",
+      "comments": []
+    },
+    {
+      "number": 311,
+      "id": "I_kwDOGKuqOc53B8cg",
+      "title": "Prio3: Add guidance for choosing `PROOFS` and `Flp.Field` ",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/311",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "If a small field is used, then it may be necessary to use a larger number of proofs in order to achieve the desired level of robustness. (Privacy is not significantly impacted by the choice of these parameters.) The draft needs to provide some guidance for choosing this.\r\n\r\nWe may also consider re-parameterizing the existing Prio3 variants.\r\n\r\nSee #177 for initial discussion and analysis.\r\n\r\ncc/ @albertpl ",
+      "createdAt": "2023-11-16T14:34:37Z",
+      "updatedAt": "2023-11-16T14:36:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 312,
+      "id": "I_kwDOGKuqOc53CORA",
+      "title": "Add test vectors to draft",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/312",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We removed them a couple of drafts ago because updating them was becoming a pain. (Note that machine-readable test vectors can be found in https://github.com/cfrg/draft-irtf-cfrg-vdaf/tree/main/poc/test_vec.)",
+      "createdAt": "2023-11-16T15:03:15Z",
+      "updatedAt": "2023-11-16T15:03:15Z",
+      "closedAt": null,
       "comments": []
     }
   ],
@@ -25821,7 +25875,7 @@
       "id": "PR_kwDOGKuqOc5fImXg",
       "title": "Prio3: Improve domain separation for multi-proof mode",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/309",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -25830,17 +25884,19 @@
       ],
       "body": "Partially addresses #177.\r\n\r\nThe query randomness is correlated for different values of `Prio3.PROOFS`. To provide defense in depth in case the same verification key is used for different versions, prepend the binder with `bytes(Prio3.PROOFS)`.\r\n\r\nFor consistency, do the same for the prove randomness and each Helper's share of the proofs. Also, do the same for joint randomness in case `Prio3.PROOFS == 1`.",
       "createdAt": "2023-11-10T12:06:21Z",
-      "updatedAt": "2023-11-15T23:01:06Z",
+      "updatedAt": "2023-11-16T14:28:15Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "ccbb6a0080255b0dbd28630bfa8b8d522b99fd84",
       "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "headRefName": "cjpatton/177-breaking",
       "headRefOid": "bdf1354f2c501bd9c10ff7737bc07ee4a4992937",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-11-16T14:28:14Z",
+      "mergedAt": "2023-11-16T14:28:14Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "bfcfeb77a7f5866dbf728a247e537248ab303655"
+      },
       "comments": [
         {
           "author": "cjpatton",
@@ -25945,6 +26001,86 @@
           "createdAt": "2023-11-14T16:29:56Z",
           "updatedAt": "2023-11-14T16:29:56Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 313,
+      "id": "PR_kwDOGKuqOc5fpNfO",
+      "title": "Prepare VDAF-08",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/313",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* Update change log\r\n* Bump `VERSION`\r\n* Generate test vectors",
+      "createdAt": "2023-11-16T15:23:52Z",
+      "updatedAt": "2023-11-16T22:36:29Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "bfcfeb77a7f5866dbf728a247e537248ab303655",
+      "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "headRefName": "cjpatton/draft08",
+      "headRefOid": "76d7a862ef1838871353348d34e2f056fe739c30",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5nbSfD",
+          "commit": {
+            "abbreviatedOid": "76d7a86"
+          },
+          "author": "schoppmp",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-16T18:51:30Z",
+          "updatedAt": "2023-11-16T18:51:30Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5nbgrd",
+          "commit": {
+            "abbreviatedOid": "76d7a86"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-11-16T19:16:18Z",
+          "updatedAt": "2023-11-16T19:16:24Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "This is for my own edification, not a request to change the wording: since k_shard is randomly generated, and not used anywhere else, this binding isn't checked/enforced by any other protocol participant. While this isn't preventing any replay attack, I can see that it could simplify security proofs, and maybe improve bounds, by eliminating the impact of k_shard colliding. Is it typical to still refer to incorporating identifiers as \"binding\" in situations like this?",
+              "createdAt": "2023-11-16T19:16:18Z",
+              "updatedAt": "2023-11-16T19:16:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5ndB2C",
+          "commit": {
+            "abbreviatedOid": "76d7a86"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-11-16T22:36:29Z",
+          "updatedAt": "2023-11-16T22:36:29Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "\"Binding\" is a very abused term. I'm using the phrase \"bind to nonce\" here to mean that the value is derived from the nonce: if the changes, then so does the value. I don't mean to imply any particular security property. In certain situations, this sort of thing may indeed be necessary for security.",
+              "createdAt": "2023-11-16T22:36:29Z",
+              "updatedAt": "2023-11-16T22:36:29Z"
+            }
+          ]
         }
       ]
     }
