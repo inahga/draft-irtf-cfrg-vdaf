@@ -5,12 +5,12 @@
 CFRG                                                        R. L. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                                   D. Cook
-Expires: 19 May 2024                                                ISRG
+Expires: 23 May 2024                                                ISRG
                                                                C. Patton
                                                               Cloudflare
                                                            P. Schoppmann
                                                                   Google
-                                                        16 November 2023
+                                                        20 November 2023
 
 
               Verifiable Distributed Aggregation Functions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 May 2024.
+   This Internet-Draft will expire on 23 May 2024.
 
 Copyright Notice
 
@@ -342,6 +342,23 @@ Table of Contents
    (*) Indicates a change that breaks wire compatibility with the
    previous draft.
 
+   08:
+
+   *  Poplar1: Bind the report nonce to the authenticator vector
+      programmed into the IDPF. (*)
+
+   *  IdpfPoplar: Modify extend() by stealing each control bit from its
+      corresponding seed.  This improves performance by reducing the
+      number of AES calls per level from 3 to 2.  The cost is a slight
+      reduction in the concrete privacy bound. (*)
+
+   *  Prio3: Add support for generating and verifying mutliple proofs
+      per measurement.  This enables a trade-off between communication
+      cost and runtime: if more proofs are used, then a smaller field
+      can be used without impacting robustness. (*)
+
+   *  Replace SHAKE128 with TurboSHAKE128. (*)
+
    07:
 
    *  Rename PRG to XOF ("eXtendable Output Function").  Accordingly,
@@ -564,7 +581,7 @@ Table of Contents
    b'some constant string').
 
    A global constant VERSION of type Unsigned is defined, which
-   algorithms are free to use as desired.  Its value SHALL be 7.
+   algorithms are free to use as desired.  Its value SHALL be 8.
 
    This document describes algorithms for multi-party computations in
    which the parties typically communicate over a network.  Wherever a
