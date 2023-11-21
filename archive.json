@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-19T00:45:35.967767+00:00",
+  "timestamp": "2023-11-21T00:43:05.886937+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4527,7 +4527,7 @@
       ],
       "body": "Hello, I had a discussion with @cjpatton and @pratiksarkar93 about the VDAF security considerations. The draft states:\r\n\r\n```\r\n VDAFs have two essential security goals:\r\n\r\n 1.  Privacy: An attacker that controls the network, the Collector,\r\n     and a subset of Clients and Aggregators learns nothing about the\r\n     measurements of honest Clients beyond what it can deduce from the\r\n     aggregate result.\r\n\r\n 2.  Robustness: An attacker that controls the network and a subset of\r\n     Clients cannot cause the Collector to compute anything other than\r\n     the aggregate of the measurements of honest Clients.\r\n```\r\n\r\nI was wondering if the notion of **robustness** is referring only to **correctness** or to both correctness and **guaranteed output delivery (GOD)**. Would it make sense to split robustness into these two properties to use more formal MPC terms (i.e., [pages 2 & 3 from Lindell's paper](https://eprint.iacr.org/2020/300.pdf))? \r\n\r\nFor example, the draft states \"break robustness\" or \"attack on robustness\" but it is not clear if that means to cause the Collector to output an incorrect result (i.e., attack on correctness) or to prevent honest parties from receiving their output (i.e., attack on GOD).\r\n\r\n\r\n",
       "createdAt": "2023-10-19T19:08:55Z",
-      "updatedAt": "2023-10-25T20:15:23Z",
+      "updatedAt": "2023-11-20T13:13:21Z",
       "closedAt": null,
       "comments": [
         {
@@ -4578,6 +4578,13 @@
           "body": "@cjpatton  Yes the draft is aligned with what I was proposing. The terms \"robustness\" and \"privacy\" need to be elaborated more. I can do that in the Security Considerations section. ",
           "createdAt": "2023-10-25T11:42:52Z",
           "updatedAt": "2023-10-25T11:42:52Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Summarizing TODOs from this issue and offline discussions:\r\n\r\n- [ ] Clarify that an attacker that controls the network can break guaranteed-output-delivery\r\n- [ ] Clarify distinction between robustness against malicious Clients and robustness against malicious Clients and Aggregators (the draft's goal is the former).\r\n",
+          "createdAt": "2023-11-20T13:13:20Z",
+          "updatedAt": "2023-11-20T13:13:20Z"
         }
       ]
     },
@@ -26009,24 +26016,26 @@
       "id": "PR_kwDOGKuqOc5fpNfO",
       "title": "Prepare VDAF-08",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/313",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "* Update change log\r\n* Bump `VERSION`\r\n* Generate test vectors",
       "createdAt": "2023-11-16T15:23:52Z",
-      "updatedAt": "2023-11-16T22:36:29Z",
+      "updatedAt": "2023-11-20T12:48:11Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "bfcfeb77a7f5866dbf728a247e537248ab303655",
       "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "headRefName": "cjpatton/draft08",
       "headRefOid": "76d7a862ef1838871353348d34e2f056fe739c30",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2023-11-20T12:48:11Z",
+      "mergedAt": "2023-11-20T12:48:11Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "b74e9c37d838b9a1182f0e4b7b4f6e737bd565ed"
+      },
       "comments": [],
       "reviews": [
         {
