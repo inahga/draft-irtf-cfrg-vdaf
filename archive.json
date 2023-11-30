@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-28T00:43:01.825011+00:00",
+  "timestamp": "2023-11-30T00:42:39.136044+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4671,6 +4671,32 @@
       "updatedAt": "2023-11-16T15:03:15Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 314,
+      "id": "I_kwDOGKuqOc54FTdx",
+      "title": "Consider generalizing `num_shares` in `Flp` interface",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/314",
+      "state": "OPEN",
+      "author": "junyechen1996",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "feature"
+      ],
+      "body": "Under [Flp](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-08.html#name-fully-linear-proof-flp-syst) interface, the APIs contain a parameter `num_shares` which seems to be something useful in certain FLP constructions, e.g., FLPs that need to normalize a constant if it's not multiplied with a secret-shared variable. I wonder if this parameter can be more generic to tailor the need for each FLP. Some use cases that may benefit from this:\r\n\r\n- Avoid re-computation of variables that stay the same in each FLP proof in [multiproof setting](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-08.html#name-multiple-proofs). In #177  and #305 , the VDAF spec added support to allow a VDAF to run multiple proofs of its FLP to improve robustness. Inside the `eval()` function used by both `prove()` and `query()`, the FLP may compute \"some variables\" locally, which will then be fed as inputs to gadgets. Those variables don't change within each proof, so the VDAF may choose to compute those variables once, and feed them to each FLP's proof repetition to save computation time. Examples include the `sum_check` variable in [`Prio3Histogram`](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-08.html#name-prio3histogram), which only needs to be computed once, and stays the same for all FLP proof repetitions.\r\n\r\n- FLPs that prefer to sample random values from a seed directly, instead of passing the random values as field elements in `joint_rand` to `prove()` and `query()`. The benefit include: (1) if the FLP uses a large number of field elements, it may prefer to sample the field elements on the fly instead of keeping all field elements in memory. (2) If the FLP prefers to not use field elements to represent its random values, (e.g., it may only want to sample binary values), so it's more convenient for FLP to sample from a random buffer directly, e.g., by looking at the random buffer bit by bit.\r\n\r\nPerhaps we can generalize today's `num_shares` parameter to a FLP-specific struct to support these use cases? Note this won't be wire breaking to the VDAF interface, but improves the flexibility of the integration between VDAF and FLP.",
+      "createdAt": "2023-11-28T15:05:32Z",
+      "updatedAt": "2023-11-28T15:47:45Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This sounds like a useful improvement to me. I'm imagining something like an associated type for the `Valid` API. Call it something like `Context`, or `EvaluationParam`?",
+          "createdAt": "2023-11-28T15:47:36Z",
+          "updatedAt": "2023-11-28T15:47:36Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -26090,6 +26116,63 @@
               "updatedAt": "2023-11-16T22:36:29Z"
             }
           ]
+        }
+      ]
+    },
+    {
+      "number": 315,
+      "id": "PR_kwDOGKuqOc5gmaSM",
+      "title": "Remove test vectors for non-standard Prio3 variants",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/315",
+      "state": "MERGED",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The reference code has implementations of Prio3 variants that have not been standardized. The test code generates test vectors for these, which we checked in to the repo when we cut the last draft.\r\n\r\nTo avoid confusion, remove the test vectors for these non-standardized variants.",
+      "createdAt": "2023-11-28T20:53:00Z",
+      "updatedAt": "2023-11-28T22:19:29Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "b74e9c37d838b9a1182f0e4b7b4f6e737bd565ed",
+      "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "headRefName": "cjpatton/remove-unnused-test-vec",
+      "headRefOid": "9b7fff25579423291ac4217f0f1f19fecb9b6980",
+      "closedAt": "2023-11-28T22:19:29Z",
+      "mergedAt": "2023-11-28T22:19:29Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "e03411b116a185de6c42dfe43a0e8f3b5f62ca90"
+      },
+      "comments": [
+        {
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "body": "One related note: when `test_prio3sumvec_with_multiproof()` calls `_test_prio3sumvec()` three times, this results in clobbering the test vector file twice. Before we eventually standardize this, we'll want to pass different numbers for `test_vec_instance` to fix this.",
+          "createdAt": "2023-11-28T20:59:09Z",
+          "updatedAt": "2023-11-28T20:59:09Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Looks good. Should we take out the `print_test_vec=TEST_VECTOR` arguments that generated these as well?\r\n\r\nDone.",
+          "createdAt": "2023-11-28T21:13:59Z",
+          "updatedAt": "2023-11-28T21:13:59Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5oiwKm",
+          "commit": {
+            "abbreviatedOid": "dcf940e"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good. Should we take out the `print_test_vec=TEST_VECTOR` arguments that generated these as well?",
+          "createdAt": "2023-11-28T21:05:24Z",
+          "updatedAt": "2023-11-28T21:05:24Z",
+          "comments": []
         }
       ]
     }
