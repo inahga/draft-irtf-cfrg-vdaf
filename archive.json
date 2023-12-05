@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-03T00:45:19.343655+00:00",
+  "timestamp": "2023-12-05T00:43:11.494682+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4695,6 +4695,39 @@
           "body": "This sounds like a useful improvement to me. I'm imagining something like an associated type for the `Valid` API. Call it something like `Context`, or `EvaluationParam`?",
           "createdAt": "2023-11-28T15:47:36Z",
           "updatedAt": "2023-11-28T15:47:36Z"
+        }
+      ]
+    },
+    {
+      "number": 316,
+      "id": "I_kwDOGKuqOc54mcxP",
+      "title": "Clarify that Poplar-like protocols may leak sensitive information if the collector misbehaves",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/316",
+      "state": "OPEN",
+      "author": "simon-friedberger",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "schoppmp"
+      ],
+      "labels": [],
+      "body": "The collector decides which parts of the IDPF tree to explore. This not only leaks prefixes of the heavy hitter values but, if the collector decides to explore other branches, possibly the values of individual clients.\r\n\r\nThis is pointed out in BBCGGI21:\r\n\r\n> A malicious server\u2019s only strategy to learn extra information\r\nin Protocol 5 is to manipulate answers to the prefix-count oracle\r\nqueries using an \u201cadditive attack.\u201d [...] Intuitively:\r\nthe adversary can essentially control which strings are heavy\r\nhitters (and can thus learn how many honest clients hold strings\r\nin a small set), [..]\r\n\r\nIn the current DAP implementation this is attack is trivial to execute for the collector since it even sees the values in plain. This risk should be clearly pointed out in the standard.",
+      "createdAt": "2023-12-04T08:58:48Z",
+      "updatedAt": "2023-12-04T18:01:20Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "simon-friedberger",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "While this clarifies the threat in the text. It leaves a problematic situation where there is no clear argument why anybody should use Poplar instead of a much cheaper shuffling based solution.",
+          "createdAt": "2023-12-04T09:20:58Z",
+          "updatedAt": "2023-12-04T09:20:58Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for flagging, Simon!",
+          "createdAt": "2023-12-04T18:01:13Z",
+          "updatedAt": "2023-12-04T18:01:13Z"
         }
       ]
     }
@@ -26175,6 +26208,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 317,
+      "id": "PR_kwDOGKuqOc5hB1Y9",
+      "title": "Clarify powers of malicious collectors in Poplar",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/317",
+      "state": "OPEN",
+      "author": "simon-friedberger",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This resolves https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/316",
+      "createdAt": "2023-12-04T09:19:26Z",
+      "updatedAt": "2023-12-04T09:19:26Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "e03411b116a185de6c42dfe43a0e8f3b5f62ca90",
+      "headRepository": "simon-friedberger/draft-irtf-cfrg-vdaf",
+      "headRefName": "main",
+      "headRefOid": "cba222fa5946ff286e3bdb6b1b5377e7906b79b4",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
