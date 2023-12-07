@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-05T00:43:11.494682+00:00",
+  "timestamp": "2023-12-07T00:42:53.254139+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -1105,7 +1105,7 @@
       "id": "I_kwDOGKuqOc5IlhvL",
       "title": "Rename Prepare",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/48",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "chris-wood",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -1114,8 +1114,8 @@
       ],
       "body": "While prepare seems to make sense in the context of the whole VDAF flow -- \"prepare a thing to be aggregated\" -- it's where most of the interesting VDAF work takes place. Maybe \"process\" or something would be better?",
       "createdAt": "2022-04-27T19:33:58Z",
-      "updatedAt": "2023-01-31T14:54:38Z",
-      "closedAt": null,
+      "updatedAt": "2023-12-05T22:25:18Z",
+      "closedAt": "2023-12-05T22:25:17Z",
       "comments": [
         {
           "author": "cjpatton",
@@ -1144,6 +1144,13 @@
           "body": "@hannahdaviscrypto has suggested the term \"refine\", as in \"to refine the input shares into refined shares\".",
           "createdAt": "2023-01-31T14:54:38Z",
           "updatedAt": "2023-01-31T14:54:38Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "When I've discussed this issue with the DAP/VDAF editors, no one is particularly enthusiastic about this change at this point. I think the ship has sailed. If anyone feels strongly about changing it (best suggestion so far is \"refine\"), then feel free to re-open.",
+          "createdAt": "2023-12-05T22:25:18Z",
+          "updatedAt": "2023-12-05T22:25:18Z"
         }
       ]
     },
@@ -4186,12 +4193,10 @@
       "assignees": [
         "schoppmp"
       ],
-      "labels": [
-        "editorial"
-      ],
+      "labels": [],
       "body": "A recent [email](https://mailarchive.ietf.org/arch/msg/ppm/6DEXt2PS3IGOGWcg5hHzgsIGYyg/) on the PPM list mentioned using Poplar1 and making some optimizations in the traversal of the IDPF tree. One natural way to alter the tree traversal algorithm would be to stop early before reaching the leaf level, but I'm concerned that doing so would lose the benefit of the \"extractability\" property, which depends on the leaf level field size being larger, and thus it could impact the whole scheme's robustness. Currently, we only mention extractability twice, in the context of the public share and the leaf level field size, but we do not explain its relevance. Is it the case that maliciously constructed reports could evaluate to \"1\" on multiple prefixes at some inner level, but it would be computationally infeasible to do the same on the leaf level? If so, we should outline the limitations on robustness, and possibly provide advice about skipping tree levels, i.e. to always do one last subset histogram at the leaf level. In what way do the secure sketching scheme and the extractability property contribute to the overall VDAF's robustness? Would the attack on an inner level be brute-forcing keys that produce values that pass secure sketching by pure chance, inside a ~2^-64 soundness error?",
       "createdAt": "2023-07-28T16:53:58Z",
-      "updatedAt": "2023-08-17T01:06:22Z",
+      "updatedAt": "2023-12-05T22:30:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -4200,6 +4205,20 @@
           "body": "Good catch, and +1 to clarifying. (Please follow up on the list, if you haven't already.)\r\n\r\nIn [[DPRS23](https://eprint.iacr.org/2023/130)] we ended up needing extractability for the IDPF (Definition 5) in order to prove security for Doplar. However, our design is more conservative, I think due to the more flexible VDAF abstraction.  in Doplar, we need to be able to extract the IDPF inputs from the random oracle even if the attacker doesn't query the leaf nodes. I think [[BBCG+21](https://eprint.iacr.org/2021/017.pdf)] expect the IDPF to always be queried at the leaf nodes (eventually), which maybe is enough in a more restricted threat model.\r\n\r\ncc/ @schoppmp ",
           "createdAt": "2023-08-01T20:53:00Z",
           "updatedAt": "2023-08-01T20:55:01Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Related: https://github.com/ietf-wg-ppm/draft-ietf-ppm-dap/pull/533#discussion_r1411291353",
+          "createdAt": "2023-12-05T22:29:30Z",
+          "updatedAt": "2023-12-05T22:29:30Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Related: https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/101",
+          "createdAt": "2023-12-05T22:30:15Z",
+          "updatedAt": "2023-12-05T22:30:15Z"
         }
       ]
     },
@@ -4648,13 +4667,51 @@
       "state": "OPEN",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
-      "assignees": [],
+      "assignees": [
+        "cjpatton"
+      ],
       "labels": [],
       "body": "If a small field is used, then it may be necessary to use a larger number of proofs in order to achieve the desired level of robustness. (Privacy is not significantly impacted by the choice of these parameters.) The draft needs to provide some guidance for choosing this.\r\n\r\nWe may also consider re-parameterizing the existing Prio3 variants.\r\n\r\nSee #177 for initial discussion and analysis.\r\n\r\ncc/ @albertpl ",
       "createdAt": "2023-11-16T14:34:37Z",
-      "updatedAt": "2023-11-16T14:36:03Z",
+      "updatedAt": "2023-12-06T20:09:16Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "(REVISED, see comment below.)\r\n\r\nI've written a sage script (#318) for plotting robustness of Prio3SumVec for various choices of field and number of proofs. The generated plot is below. What it shows is an upper bound of the probability that $1$ in $1,000,000,000$ accepted reports is invalid, given a amount of computational resources ($2^{80}$ random oracle queries, which is a pretty comfortable margin). The x-axis shows the input length; the number of bits is $1$; and the chunk length is set to the asymptotic optimal (square root of the length).\r\n\r\n![prio3_sum_vec](https://github.com/cfrg/draft-irtf-cfrg-vdaf/assets/3453007/49442bc9-91c8-4c87-9203-72b5df267d7b)\r\n\r\n* The baseline is Field128/1 (one proof). The probability of a robustness error is definitely non-negligible (where \"negligible\" is approximately the probability of correctly guessing an AES key), but it's still quite unlikely to happen. For instance, for input size = $100,000$, the probability that $1$ in every $1$ billion accepted reports is invalid is at most $2^{-36}$. This is the same as the probability of ruining $1$ in every $100,000$ batches assuming a batch size of $10,000$.\r\n* Field64/1 is quite terrible and should not be deployed.\r\n* Field64/2 is worse than Field128/1, but may be tolerable depending on the application.\r\n* Field64/3 is comfortably better than Field128/1.\r\n* Field64/4 is much more robust than we'd ever need.\r\n\r\nBased on this analysis, I'd suggest the following text change. Top of Section 7.4:\r\n\r\n> For circuits for which the number of gadget calls grows sub-linearily in the parameters (e.g., `Sum`, `SumVec`, or `Histogram`), a smaller field can be used as long as additional proofs are generated and verified. When replacing `Field128` with `Field64` it is RECOMMENDED to use `3` proofs. However, some applications may tolerate as few as `2`.\r\n",
+          "createdAt": "2023-12-05T22:05:27Z",
+          "updatedAt": "2023-12-06T19:59:33Z"
+        },
+        {
+          "author": "albertpl",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This assumes the adversary donates 1000000000 reports? either control the number of devices or break authentication / rate limit.",
+          "createdAt": "2023-12-06T05:22:30Z",
+          "updatedAt": "2023-12-06T05:22:30Z"
+        },
+        {
+          "author": "wangshan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "is there an explanation that Field64/1 prob is > 1?",
+          "createdAt": "2023-12-06T12:22:26Z",
+          "updatedAt": "2023-12-06T12:22:26Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> @albertpl This assumes the adversary donates 1000000000 reports? either control the number of devices or break authentication / rate limit.\r\n\r\nThe bond actually says something slightly different: it tells us the maximum probability that, among 1 billion reports that we accepted, at least one of them is invalid. In other words, we must include benign (i.e., not malicious reports) as part of the attack. (Intuitively, this is because VDAF preparation depends on a secret key, and information about this key gets exposed to the adversary over the course of its attack. For details, see the robustness game in ia.cr/2023/130, Figure 3.)\r\n\r\n> @wangshan is there an explanation that Field64/1 prob is > 1?\r\n\r\nThe thing that's plotted is an upperbound of the probability, not the probability. If the bounds is > 1, then it's called \"vacuous\", meaning it tells us nothing about the chances of a successful attack. The way to interpret this is: the parameters are too weak to provide meaningful robustness.\r\n\r\n",
+          "createdAt": "2023-12-06T17:54:40Z",
+          "updatedAt": "2023-12-06T17:54:57Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks @junyechen1996 and @albertpl for your feedback on the PR. Due primarily to https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/318#discussion_r1417425565, we need to revise the bounds:\r\n\r\n![prio3_sum_vec_revised](https://github.com/cfrg/draft-irtf-cfrg-vdaf/assets/3453007/645b1567-51ce-4fc0-9fbc-ad8b7c184aa8)\r\n\r\n* Field128/1 (baseline): For input size = $100,000$, the probability that $1$ in every $1$ billion accepted reports is invalid is at most $2^{-29}$.\r\n* Field64/2 is significantly worse than Field128/1, but may be tolerable for some applications and for small input sizes.\r\n* Field64/3 is comfortably better than Field128/1.\r\n\r\nI'd revise the text change as follows: \r\n\r\n> For some circuits, a smaller field can be used safely as long as additional proofs are generated and verified. When replacing `Field128` with `Field64` it is RECOMMENDED to use `3` proofs. However, some applications may tolerate as few as `2`.\r\n\r\n",
+          "createdAt": "2023-12-06T20:09:15Z",
+          "updatedAt": "2023-12-06T20:09:15Z"
+        }
+      ]
     },
     {
       "number": 312,
@@ -4712,7 +4769,7 @@
       "labels": [],
       "body": "The collector decides which parts of the IDPF tree to explore. This not only leaks prefixes of the heavy hitter values but, if the collector decides to explore other branches, possibly the values of individual clients.\r\n\r\nThis is pointed out in BBCGGI21:\r\n\r\n> A malicious server\u2019s only strategy to learn extra information\r\nin Protocol 5 is to manipulate answers to the prefix-count oracle\r\nqueries using an \u201cadditive attack.\u201d [...] Intuitively:\r\nthe adversary can essentially control which strings are heavy\r\nhitters (and can thus learn how many honest clients hold strings\r\nin a small set), [..]\r\n\r\nIn the current DAP implementation this is attack is trivial to execute for the collector since it even sees the values in plain. This risk should be clearly pointed out in the standard.",
       "createdAt": "2023-12-04T08:58:48Z",
-      "updatedAt": "2023-12-04T18:01:20Z",
+      "updatedAt": "2023-12-06T16:30:43Z",
       "closedAt": null,
       "comments": [
         {
@@ -4728,6 +4785,27 @@
           "body": "Thanks for flagging, Simon!",
           "createdAt": "2023-12-04T18:01:13Z",
           "updatedAt": "2023-12-04T18:01:13Z"
+        },
+        {
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think Poplar1 still has a good case if it is deployed with differential privacy noise added at the aggregators. This would have minimal impact on the utility of the heavy hitters results, while protecting the privacy of rare measurements.\r\n\r\nMy initial hunch is that we'd want to sample DP noise from either the exponential or Laplace distribution, and add that to the shares of counts for each candidate prefix.",
+          "createdAt": "2023-12-05T23:38:43Z",
+          "updatedAt": "2023-12-05T23:38:43Z"
+        },
+        {
+          "author": "simon-friedberger",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@divergentdave But doesn't the same DP countermeasure apply to shuffling?",
+          "createdAt": "2023-12-06T16:17:26Z",
+          "updatedAt": "2023-12-06T16:17:26Z"
+        },
+        {
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think that without functional secret sharing, you would have to trust the server that decrypts inputs received from the anonymizing proxy to actually apply the DP when counting occurrences, and keep the raw inputs private. Whereas with functional secret sharing, we can implement the addition of DP noise in a way that only needs one honest server out of two.",
+          "createdAt": "2023-12-06T16:30:41Z",
+          "updatedAt": "2023-12-06T16:30:41Z"
         }
       ]
     }
@@ -26221,7 +26299,7 @@
       "labels": [],
       "body": "This resolves https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/316",
       "createdAt": "2023-12-04T09:19:26Z",
-      "updatedAt": "2023-12-04T09:19:26Z",
+      "updatedAt": "2023-12-05T19:50:53Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "e03411b116a185de6c42dfe43a0e8f3b5f62ca90",
@@ -26234,6 +26312,244 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 318,
+      "id": "PR_kwDOGKuqOc5hOszr",
+      "title": "Add a tool for plotting Prio3 robustness bounds",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/318",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Partially addresses #311.",
+      "createdAt": "2023-12-05T21:26:02Z",
+      "updatedAt": "2023-12-06T21:13:55Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "e03411b116a185de6c42dfe43a0e8f3b5f62ca90",
+      "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "headRefName": "cjpatton/311",
+      "headRefOid": "46a9ae27733b61e047fbd74cb0cb71c423db0f64",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5pTGwY",
+          "commit": {
+            "abbreviatedOid": "b38ac91"
+          },
+          "author": "albertpl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T04:33:38Z",
+          "updatedAt": "2023-12-06T05:07:44Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "Maybe comment or rename it to souness error?",
+              "createdAt": "2023-12-06T04:33:39Z",
+              "updatedAt": "2023-12-06T05:07:44Z"
+            },
+            {
+              "originalPosition": 6,
+              "body": "Any chance to reuse the definitions in field.py?",
+              "createdAt": "2023-12-06T04:36:19Z",
+              "updatedAt": "2023-12-06T05:07:44Z"
+            },
+            {
+              "originalPosition": 50,
+              "body": "Same question as above. Is this meant to be used as standalone tool? or it is OK to reuse  the class `SumVec`?",
+              "createdAt": "2023-12-06T04:53:18Z",
+              "updatedAt": "2023-12-06T05:07:44Z"
+            },
+            {
+              "originalPosition": 27,
+              "body": "btw, I believe when `num_proofs` increase,  these negligible may become more significant since the first term is exponentially shrinking. Any harm to include it anyway?",
+              "createdAt": "2023-12-06T05:05:07Z",
+              "updatedAt": "2023-12-06T05:07:44Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pXYJB",
+          "commit": {
+            "abbreviatedOid": "b38ac91"
+          },
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T14:35:15Z",
+          "updatedAt": "2023-12-06T14:36:46Z",
+          "comments": [
+            {
+              "originalPosition": 22,
+              "body": "Don't you also need to account for the soundness error of taking random linear combination, when one of the coefficients multiplied with x^2-x circuits is 0? proved by Theorem 5.3 in the same paper.",
+              "createdAt": "2023-12-06T14:35:15Z",
+              "updatedAt": "2023-12-06T14:36:46Z"
+            },
+            {
+              "originalPosition": 55,
+              "body": "nit: `math.sqrt` will produce a float, better to use round down or up? since `chunk_length` should be an integer.",
+              "createdAt": "2023-12-06T14:35:50Z",
+              "updatedAt": "2023-12-06T14:36:46Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pYkdW",
+          "commit": {
+            "abbreviatedOid": "b38ac91"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T16:23:56Z",
+          "updatedAt": "2023-12-06T16:32:04Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Could do, but I didn't want to over-complicate this script.",
+              "createdAt": "2023-12-06T16:23:57Z",
+              "updatedAt": "2023-12-06T16:32:04Z"
+            },
+            {
+              "originalPosition": 22,
+              "body": "Yes, good catch.",
+              "createdAt": "2023-12-06T16:24:33Z",
+              "updatedAt": "2023-12-06T16:32:04Z"
+            },
+            {
+              "originalPosition": 27,
+              "body": "Sure, I can add it.",
+              "createdAt": "2023-12-06T16:28:55Z",
+              "updatedAt": "2023-12-06T16:32:04Z"
+            },
+            {
+              "originalPosition": 50,
+              "body": "I think I'd rather keep it independent, but I don't feel strongly about it. If you feel strongly about this I can move this script into the poc folder.",
+              "createdAt": "2023-12-06T16:30:17Z",
+              "updatedAt": "2023-12-06T16:32:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pZew0",
+          "commit": {
+            "abbreviatedOid": "b38ac91"
+          },
+          "author": "albertpl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T18:01:22Z",
+          "updatedAt": "2023-12-06T18:01:22Z",
+          "comments": [
+            {
+              "originalPosition": 22,
+              "body": "That is excellent point! And this new term is probably the dominant one.",
+              "createdAt": "2023-12-06T18:01:22Z",
+              "updatedAt": "2023-12-06T18:01:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pZrOj",
+          "commit": {
+            "abbreviatedOid": "954b19d"
+          },
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-06T18:21:29Z",
+          "updatedAt": "2023-12-06T18:21:29Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pZrmz",
+          "commit": {
+            "abbreviatedOid": "954b19d"
+          },
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T18:22:24Z",
+          "updatedAt": "2023-12-06T18:22:29Z",
+          "comments": [
+            {
+              "originalPosition": 52,
+              "body": "I know we are assuming `bit_length = 1` in this function, but in case you want to extend this function in the future, it might help to make this explicit (e.g. defining this variable, or set that as one of the function arguments), since you also need `bit_length` when computing `circuit_soundness = length * bit_length / field_size`, so we don't forget about this assumption.",
+              "createdAt": "2023-12-06T18:22:24Z",
+              "updatedAt": "2023-12-06T18:22:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pY_J4",
+          "commit": {
+            "abbreviatedOid": "954b19d"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-06T17:11:08Z",
+          "updatedAt": "2023-12-06T18:36:05Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Done.",
+              "createdAt": "2023-12-06T17:11:08Z",
+              "updatedAt": "2023-12-06T18:36:05Z"
+            },
+            {
+              "originalPosition": 12,
+              "body": "\"bound\" would be a better term. I think I'd prefer to keep it as is.",
+              "createdAt": "2023-12-06T17:11:33Z",
+              "updatedAt": "2023-12-06T18:36:05Z"
+            },
+            {
+              "originalPosition": 55,
+              "body": "Done.",
+              "createdAt": "2023-12-06T17:14:38Z",
+              "updatedAt": "2023-12-06T18:36:05Z"
+            },
+            {
+              "originalPosition": 50,
+              "body": "Done.",
+              "createdAt": "2023-12-06T17:14:51Z",
+              "updatedAt": "2023-12-06T18:36:05Z"
+            },
+            {
+              "originalPosition": 22,
+              "body": "Done.",
+              "createdAt": "2023-12-06T17:25:47Z",
+              "updatedAt": "2023-12-06T18:36:05Z"
+            },
+            {
+              "originalPosition": 27,
+              "body": "Great catch here. This term really does indeed have an impact on the plot.",
+              "createdAt": "2023-12-06T17:46:47Z",
+              "updatedAt": "2023-12-06T18:36:05Z"
+            },
+            {
+              "originalPosition": 52,
+              "body": "Good idea, done.",
+              "createdAt": "2023-12-06T18:36:00Z",
+              "updatedAt": "2023-12-06T18:36:05Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
