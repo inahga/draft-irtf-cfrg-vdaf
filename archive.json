@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-07T00:42:53.254139+00:00",
+  "timestamp": "2023-12-10T00:46:17.416830+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4673,7 +4673,7 @@
       "labels": [],
       "body": "If a small field is used, then it may be necessary to use a larger number of proofs in order to achieve the desired level of robustness. (Privacy is not significantly impacted by the choice of these parameters.) The draft needs to provide some guidance for choosing this.\r\n\r\nWe may also consider re-parameterizing the existing Prio3 variants.\r\n\r\nSee #177 for initial discussion and analysis.\r\n\r\ncc/ @albertpl ",
       "createdAt": "2023-11-16T14:34:37Z",
-      "updatedAt": "2023-12-06T20:09:16Z",
+      "updatedAt": "2023-12-08T18:16:52Z",
       "closedAt": null,
       "comments": [
         {
@@ -4710,6 +4710,20 @@
           "body": "Thanks @junyechen1996 and @albertpl for your feedback on the PR. Due primarily to https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/318#discussion_r1417425565, we need to revise the bounds:\r\n\r\n![prio3_sum_vec_revised](https://github.com/cfrg/draft-irtf-cfrg-vdaf/assets/3453007/645b1567-51ce-4fc0-9fbc-ad8b7c184aa8)\r\n\r\n* Field128/1 (baseline): For input size = $100,000$, the probability that $1$ in every $1$ billion accepted reports is invalid is at most $2^{-29}$.\r\n* Field64/2 is significantly worse than Field128/1, but may be tolerable for some applications and for small input sizes.\r\n* Field64/3 is comfortably better than Field128/1.\r\n\r\nI'd revise the text change as follows: \r\n\r\n> For some circuits, a smaller field can be used safely as long as additional proofs are generated and verified. When replacing `Field128` with `Field64` it is RECOMMENDED to use `3` proofs. However, some applications may tolerate as few as `2`.\r\n\r\n",
           "createdAt": "2023-12-06T20:09:15Z",
           "updatedAt": "2023-12-06T20:09:15Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Slight improvement after fixing a typo pointed out by @junyechen1996:\r\n\r\n![prio3_sum_vec_revised2](https://github.com/cfrg/draft-irtf-cfrg-vdaf/assets/3453007/5592a56f-2ef4-40d6-9f8e-197424ceb2e3)\r\n",
+          "createdAt": "2023-12-07T17:10:03Z",
+          "updatedAt": "2023-12-07T17:10:03Z"
+        },
+        {
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "body": "To help with the tightness of the bound, here is a simple concrete attack. I do lack quite a bit of context, so I hope it's not too far off the actual problem.\r\n\r\nFrom what I understand the goal is to find field elements x_1, ..., x_n such that p(r) = 0, where r = H(x_1, ..., x_n) and p(s) = sum_i=1^n x_i (1 - x_i) x^(i-1), but where x_i not in {0,1} for some i.\r\n\r\nFor the moment assume n is even, and there is a nth degree primitive root of unity zeta in the field\u00a0\u2014 that is: there is a zeta with zeta^n = 1 and zeta^i \u2260 1 for all 0 \u2264 i < n.\r\n\r\nRecall two basic facts about such a PROU:\r\n\r\n- zeta + zeta^2 + ... + zeta^n = 0, because for that sum S, we have (zeta - 1)S = zeta^(n+1) - zeta = 0, and zeta \u2260 1.\r\n\r\n- In fact, for any 0<i<n, we have zeta^i + zeta^(2i) + ... + zeta^(ni) = 0. Indeed, for this sum S, we have (zeta^i - 1) S = zeta^((n+1)i) - zeta^i = zeta^i - zeta^i = 0. As zeta^i \u2260 1 by definition of PROU, we have S = 0 as desired.\r\n\r\n- zeta, zeta^2, ..., zeta^n are all distinct, for if zeta^i = zeta^j with WLOG i > j, then zeta^(i-j)=1 contradicting n being a PROU.\r\n\r\nNow, pick a random field element y not in {0,1}, and set x_1 = 0, x_2 = y, x_3 = y, ..., x_n = y.\r\n\r\nThen for any 0 < i < n, we have p(zeta^i) = y(1-y) ( zeta^i + zeta^(2i) + ... + zeta^(ni) ) = 0.\r\n\r\nThus, first precompute Z = { zeta^1, ..., zeta^(n-1) }.\r\n\r\nThen search for an y \u2260 0, 1 such that H( 0, y, y, ..., y ) in Z.\r\n\r\nWhen found, we have broken robustness. Note that in any interesting case, essentially all time of the attack is spent in computing H.\r\n\r\nWith n = 2^20, and we're using a 64 bit field, we expect only 2^44 calls to H. That's practical.\r\n\r\nWhen requiring two proofs for that 64 bit field, we're looking at 2^88 calls to H. That's possible to pull of, but _very_ expensive (>10M$).",
+          "createdAt": "2023-12-08T18:16:50Z",
+          "updatedAt": "2023-12-08T18:16:50Z"
         }
       ]
     },
@@ -4808,6 +4822,24 @@
           "updatedAt": "2023-12-06T16:30:41Z"
         }
       ]
+    },
+    {
+      "number": 319,
+      "id": "I_kwDOGKuqOc55GJpO",
+      "title": "XofTurboShake128: Consider bumping SEED_SIZE from 16 to 32 bytes",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/319",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "wire change"
+      ],
+      "body": "When thinking about Prio3 robustness (ia.cr/2023/130, Theorem 1) we (err, I, really) have been ignoring the term that depends on the size of the seed: $(q_\\text{RG} + {q_{\\text{Prep}}}^2) / 2^{\\kappa -1}$\r\n\r\n* $q_\\text{RG}$ - the number of random oracle queries (XofTurboShake128 is modeled as an RO)\r\n* $q_\\text{Prep}$ - the number of (potentially malicious) reports consumed in a given DAP task\r\n* $\\kappa$ - the seed size (16 bytes for XofTurboShake128)\r\n\r\nAs @albertpl pointed out in https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/318#discussion_r1416669600, the bound becomes vacuous after $q_\\text{Prep}=2^{63.5}$ reports (since $(2^{63.5})^2 = 2^{\\kappa -1}$).\r\n\r\nWhile it's doubtful that we'd ever consume so many reports in a single task, it's not a bad idea to have a more conservative safety margin. 32 bytes seems like a reasonable choice.",
+      "createdAt": "2023-12-07T22:57:31Z",
+      "updatedAt": "2023-12-07T22:59:48Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -26299,7 +26331,7 @@
       "labels": [],
       "body": "This resolves https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/316",
       "createdAt": "2023-12-04T09:19:26Z",
-      "updatedAt": "2023-12-05T19:50:53Z",
+      "updatedAt": "2023-12-08T17:22:16Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "e03411b116a185de6c42dfe43a0e8f3b5f62ca90",
@@ -26310,7 +26342,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Hey @simon-friedberger, just a heads up that we've been disucssing this issue and may end up resolving it slightly differently. We'll review this PR soon. Thanks again!",
+          "createdAt": "2023-12-08T17:22:14Z",
+          "updatedAt": "2023-12-08T17:22:14Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -26325,13 +26365,13 @@
       "labels": [],
       "body": "Partially addresses #311.",
       "createdAt": "2023-12-05T21:26:02Z",
-      "updatedAt": "2023-12-06T21:13:55Z",
+      "updatedAt": "2023-12-07T16:29:34Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "e03411b116a185de6c42dfe43a0e8f3b5f62ca90",
       "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "headRefName": "cjpatton/311",
-      "headRefOid": "46a9ae27733b61e047fbd74cb0cb71c423db0f64",
+      "headRefOid": "f6f689b4962d88217b1d27f1c2152099800b6639",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -26546,6 +26586,59 @@
               "body": "Good idea, done.",
               "createdAt": "2023-12-06T18:36:00Z",
               "updatedAt": "2023-12-06T18:36:05Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pcYSY",
+          "commit": {
+            "abbreviatedOid": "46a9ae2"
+          },
+          "author": "albertpl",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-12-07T03:18:19Z",
+          "updatedAt": "2023-12-07T03:18:19Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5pgsAQ",
+          "commit": {
+            "abbreviatedOid": "46a9ae2"
+          },
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-07T13:33:06Z",
+          "updatedAt": "2023-12-07T13:33:48Z",
+          "comments": [
+            {
+              "originalPosition": 53,
+              "body": "Why does the power have negative sign..?\r\n```suggestion\r\n    chunk_length = max(1, int(length**(1/2)))\r\n```",
+              "createdAt": "2023-12-07T13:33:06Z",
+              "updatedAt": "2023-12-07T13:33:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5piOMQ",
+          "commit": {
+            "abbreviatedOid": "46a9ae2"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-12-07T16:29:33Z",
+          "updatedAt": "2023-12-07T16:29:34Z",
+          "comments": [
+            {
+              "originalPosition": 53,
+              "body": "Whoops, the negative sign isn't supposed to be there.\r\nThe `int()` isn't necessary because sage represents numbers exactly:\r\n```\r\n[cjpatton/311][~/github.com/cfrg/draft-irtf-cfrg-vdaf/poc]$ sage\r\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\r\n\u2502 SageMath version 9.8, Release Date: 2023-02-11                     \u2502\r\n\u2502 Using Python 3.11.1. Type \"help()\" for help.                       \u2502\r\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\r\nsage: 100^(1/2)\r\n10\r\nsage: 102^(1/2)\r\nsqrt(102)\r\nsage:\r\n```",
+              "createdAt": "2023-12-07T16:29:33Z",
+              "updatedAt": "2023-12-07T16:29:34Z"
             }
           ]
         }
