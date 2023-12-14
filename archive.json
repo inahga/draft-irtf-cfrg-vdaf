@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-12T00:43:14.481786+00:00",
+  "timestamp": "2023-12-14T00:42:07.147637+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -315,7 +315,7 @@
       ],
       "body": "With `prio3` it's straightforward to roughly estimate quantiles using a histogram (cf https://docs.rs/prio/0.6.1/prio/vdaf/prio3/type.Prio3Histogram64.html). But what if you wanted to precisely compute, say, the 50th percentile (i.e., the median) or the 95th percentile? Prio isn't well-suited for this (cf [[CGB17], Appendix G]).\r\n\r\nIf your application allows for multiple rounds of interaction with the clients, maybe you could do a kind of binary search to find the quantile you're after. Suppose the client measurements are arbitrary 32-bit integers and you want to compute the median. Suppose there are `N` measurements in all. Let `buckets = [2^31]`. Have the clients shard their measurements using `buckets` as the bucket boundaries. Execute the VDAF over the set of input shares, getting bucket counts `agg` as the aggregate result. `agg[0]` is equal to the number of measurements less than or equal to `2^31`, and `agg[1] <= N/2`, then the median must be less than `2^31`. On the other hand, if `agg[1] > N/2` then you know the median must greater than `2^31`. You then repeat the process, adjusting the bucket boundaries based on the previous result: if the median is less than `2^31`, then let `buckets = [2^31 - 2^30]`; otherwise let `buckets = [2^31 + 2^30]`.\r\n\r\nI'm not sure how many iterations would be needed, or how precisely you could compute quantiles this way. Regardless, ideally there would be a VDAF that allows for computing quantiles without interacting with clients more than once.\r\n\r\n\r\n\r\n\r\n\r\n[CGB17]: https://crypto.stanford.edu/prio/paper.pdf",
       "createdAt": "2021-11-17T17:58:28Z",
-      "updatedAt": "2023-03-02T17:40:59Z",
+      "updatedAt": "2023-12-12T23:19:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -345,6 +345,13 @@
           "body": "Great. I'll label this \"editorial\" and assign it to you. Take your time ... we don't need needs this for 05.",
           "createdAt": "2023-03-02T17:40:48Z",
           "updatedAt": "2023-03-02T17:40:48Z"
+        },
+        {
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thinking about this some more, the algorithm described above would go against what I wrote in #273, because it would rely on prefix counts from inner tree nodes, and never check some of them all the way down to the leaf node. This would leave us with significantly worse robustness bounds for this application.\r\n\r\nHere's an example of what the quantile algorithm would query and receive as it traverses a small tree, looking for the median.\r\n\r\n```mermaid\r\ngraph\r\nroot[root\\ncount: 187]\r\nroot --> 0 & 1\r\n0[0\\ncount: 115]\r\n1[1\\ncount: 72]\r\n0 --> 00 & 01\r\n1 --> 10 & 11\r\n00[00\\ncount: 50]\r\n01[01\\ncount: 65]\r\n00 --> 000 & 001\r\n01 --> 010 & 011\r\n10 --> 100 & 101\r\n11 --> 110 & 111\r\n010[010\\ncount: 39]\r\n011[011\\ncount: 26\\nMedian]\r\n```\r\n\r\nTo sharpen my description of the algorithm above, we know this is the median measurement because the count of all measurements less than or equal to 0b011 is greater than 50% of the total, and the count of all measurements greater than or equal to 0b011 is greater than 100% - 50% = 50% of the total. We get 50 + 39 + 26 > 187 / 2, and 26 + 72 > 187 / 2.\r\n\r\nIn this example, we only evaluated two nodes at the leaf level of the tree. Unlike with the heavy hitters algorithm, prefix counts from inner nodes do get used in determining the final quantile result -- an attack on extractability with the smaller field elements could do worse than merely trick us into adding more candidate prefixes to explore. With heavy hitters, the leaf level offers a chance to identify and reject dishonestly generated reports. For sufficiently high precision integer measurements, it would be impractical to evaluate every possible measurement at the leaf level of the tree.\r\n\r\nWith all that said, the quantile tree walking algorithm could work well with Mastic, since the concrete security of the robustness property doesn't depend so drastically on the tree level. Perhaps we should just write up the \"heavy hitters\" and \"chosen prefixes\" modes of operation in this draft for now, and leave it at that.",
+          "createdAt": "2023-12-12T23:19:57Z",
+          "updatedAt": "2023-12-12T23:19:57Z"
         }
       ]
     },
