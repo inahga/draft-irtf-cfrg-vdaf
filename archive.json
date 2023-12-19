@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-17T00:46:16.688757+00:00",
+  "timestamp": "2023-12-19T00:43:24.836568+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4680,7 +4680,7 @@
       "labels": [],
       "body": "If a small field is used, then it may be necessary to use a larger number of proofs in order to achieve the desired level of robustness. (Privacy is not significantly impacted by the choice of these parameters.) The draft needs to provide some guidance for choosing this.\r\n\r\nWe may also consider re-parameterizing the existing Prio3 variants.\r\n\r\nSee #177 for initial discussion and analysis.\r\n\r\ncc/ @albertpl ",
       "createdAt": "2023-11-16T14:34:37Z",
-      "updatedAt": "2023-12-16T01:59:03Z",
+      "updatedAt": "2023-12-18T16:16:54Z",
       "closedAt": null,
       "comments": [
         {
@@ -4735,9 +4735,9 @@
         {
           "author": "cjpatton",
           "authorAssociation": "COLLABORATOR",
-          "body": "> To help with the tightness of the bound, here is a simple concrete attack. I do lack quite a bit of context, so I hope it's not too far off the actual problem.\r\n> \r\n> From what I understand the goal is to find field elements x_1, ..., x_n such that p(r) = 0, where r = H(x_1, ..., x_n) and p(s) = sum_i=1^n x_i (1 - x_i) x^(i-1), but where x_i not in {0,1} for some i.\r\n\r\nThis is roughly the idea, but let me make it a little more precise. (@divergentdave please fix any bugs that you see.) We're attacking Prio3SumVec, whose circuit $C$ takes as input a vector $\\vec x = (x_1, \\ldots, x_n)$ and random input $r$ and outputs:\r\n\r\n$C(\\vec x, r) = \\Sigma_{i=1}^{n}{r^i x_i (x_i - 1)}$\r\n\r\nWe can think of $x_i(x_i-1)$ as the $i$-th coefficient of a polynomial $p$ and computing $p(r)$:\r\n\r\n* If $x_i \\in \\\\{0,1\\\\}$ then $C(\\vec x, r) = 0$ for all $r$;\r\n* If $x_i \\not\\in \\\\{0,1\\\\}$ for some $i$ then $(\\vec x, r) \\ne 0$ with probability at most $\\epsilon = 1 - n/|\\mathbb{F}|$, assuming $r$ was chosen fairly. (This is because the maximum number of roots of $p$ is $n$.)\r\n\r\nIn fact, $r$ is not sampled, but _derived_, roughly as you've described. In more detail, the Client:\r\n\r\n* secret-shares the vector $\\vec x$ into $[[\\vec x]]_1, \\ldots, [[\\vec x]]_s$, where $s$ is the number of Aggregators\r\n* samples random \"blinds\" $B_1, \\ldots, B_s$\r\n* computes $r = H([[\\vec x]]_1, ..., [[\\vec x]]_s, B_1, \\ldots, B_s)$ so that the Aggregators can reconstruct $r$ without sharing their shares or blinds.\r\n\r\nThe question is how much computation do we have to do in order to break robustness of Prio3SumVec with advantage significantly better than $\\epsilon$.\r\n\r\nIn fact, if we have multiple proofs, then we evaluate $C$ multiple times on independent random inputs output by $H$. In this case we need to be $\\epsilon^k$ where $k$ is the number of proofs.\r\n\r\n\r\n\r\n\r\n> For the moment assume n is even, and there is a nth degree primitive root of unity zeta in the field \u2014 that is: there is a zeta with zeta^n = 1 and zeta^i \u2260 1 for all 0 \u2264 i < n.\r\n\r\nThis is the case for us :)\r\n\r\n>\r\n> Recall two basic facts about such a PROU:\r\n> \r\n>     * zeta + zeta^2 + ... + zeta^n = 0, because for that sum S, we have (zeta - 1)S = zeta^(n+1) - zeta = 0, and zeta \u2260 1.\r\n> \r\n>     * In fact, for any 0<i<n, we have zeta^i + zeta^(2i) + ... + zeta^(ni) = 0. Indeed, for this sum S, we have (zeta^i - 1) S = zeta^((n+1)i) - zeta^i = zeta^i - zeta^i = 0. As zeta^i \u2260 1 by definition of PROU, we have S = 0 as desired.\r\n> \r\n>     * zeta, zeta^2, ..., zeta^n are all distinct, for if zeta^i = zeta^j with WLOG i > j, then zeta^(i-j)=1 contradicting n being a PROU.\r\n\r\n\u2764\ufe0f \r\n\r\n\r\n> Now, pick a random field element y not in {0,1}, and set x_1 = 0, x_2 = y, x_3 = y, ..., x_n = y.\r\n> \r\n> Then for any 0 < i < n, we have p(zeta^i) = y(1-y) ( zeta^i + zeta^(2i) + ... + zeta^(ni) ) = 0.\r\n> \r\n> Thus, first precompute Z = { zeta^1, ..., zeta^(n-1) }.\r\n> \r\n> Then search for an y \u2260 0, 1 such that H( 0, y, y, ..., y ) in Z.\r\n\r\nI.e., fix coins for secret sharing and generating blinds and for each $y \\in \\mathbb{F}\\setminus \\\\{0,1\\\\}$ and compute $r = H([[\\vec x]]_1, ..., [[\\vec x]]_s, B_1, \\ldots, B_s)$. Stop when $r \\in Z$.\r\n\r\n> \r\n> When found, we have broken robustness. Note that in any interesting case, essentially all time of the attack is spent in computing H.\r\n> \r\n> With n = 2^20, and we're using a 64 bit field, we expect only 2^44 calls to H. That's practical.\r\n> \r\n> When requiring two proofs for that 64 bit field, we're looking at 2^88 calls to H. That's possible to pull of, but _very_ expensive (>10M$).\r\n\r\nI'd like to come up with a formula. Modeling $H$ as a random oracles it's just a series of independent Bernoulli's with probability $p = (|Z|/|\\mathbb{F}|)^k = (n/|\\mathbb{F}|)^k$ and we go until one of them succeeds.\r\n\r\nThat means the success probability after $q$ random oracle queries is $(1 - p)^q \\cdot p$, and the expected number of random oracles queries we have to make is $1/p = (|\\mathbb{F}|/n)^k$.\r\n\r\nThis confirms your math. It does seem like you could pull off $2^{88}$ evaluations of $H$ but it would require immense resources. For scale, here's a website that estimates humanity's Bitcoin-mining capacity, which is a pretty good approximation of the resources we have to break Prio: https://www.coinwarz.com/mining/bitcoin/hashrate-chart\r\n\r\nFor the record, `Field128` with one proof and `Field64` with three proofs are both definitely safe (expected $q$ of $2^{108}$ and $2^{132}$ respectively).",
+          "body": "> To help with the tightness of the bound, here is a simple concrete attack. I do lack quite a bit of context, so I hope it's not too far off the actual problem.\r\n> \r\n> From what I understand the goal is to find field elements x_1, ..., x_n such that p(r) = 0, where r = H(x_1, ..., x_n) and p(s) = sum_i=1^n x_i (1 - x_i) x^(i-1), but where x_i not in {0,1} for some i.\r\n\r\nThis is roughly the idea, but let me make it a little more precise. (@divergentdave please fix any bugs that you see.) We're attacking Prio3SumVec, whose circuit $C$ takes as input a vector $\\vec x = (x_1, \\ldots, x_n)$ and random input $r$ and outputs:\r\n\r\n$C(\\vec x, r) = \\Sigma_{i=1}^{n}{r^i x_i (x_i - 1)}$\r\n\r\nWe can think of $x_i(x_i-1)$ as the $i$-th coefficient of a polynomial $p$ and computing $p(r)$:\r\n\r\n* If $x_i \\in \\\\{0,1\\\\}$ then $C(\\vec x, r) = 0$ for all $r$;\r\n* If $x_i \\not\\in \\\\{0,1\\\\}$ for some $i$ then $(\\vec x, r) = 0$ with probability at most $\\epsilon = n/|\\mathbb{F}|$, assuming $r$ was chosen fairly. (This is because the maximum number of roots of $p$ is $n$.)\r\n\r\nIn fact, $r$ is not sampled, but _derived_, roughly as you've described. In more detail, the Client:\r\n\r\n* secret-shares the vector $\\vec x$ into $[[\\vec x]]_1, \\ldots, [[\\vec x]]_s$, where $s$ is the number of Aggregators\r\n* samples random \"blinds\" $B_1, \\ldots, B_s$\r\n* computes $r = H([[\\vec x]]_1, ..., [[\\vec x]]_s, B_1, \\ldots, B_s)$ so that the Aggregators can reconstruct $r$ without sharing their shares or blinds.\r\n\r\nThe question is how much computation do we have to do in order to break robustness of Prio3SumVec with advantage significantly better than $\\epsilon$.\r\n\r\nIn fact, if we have multiple proofs, then we evaluate $C$ multiple times on independent random inputs output by $H$. In this case we need to be $\\epsilon^k$ where $k$ is the number of proofs.\r\n\r\n\r\n\r\n\r\n> For the moment assume n is even, and there is a nth degree primitive root of unity zeta in the field \u2014 that is: there is a zeta with zeta^n = 1 and zeta^i \u2260 1 for all 0 \u2264 i < n.\r\n\r\nThis is the case for us :)\r\n\r\n>\r\n> Recall two basic facts about such a PROU:\r\n> \r\n>     * zeta + zeta^2 + ... + zeta^n = 0, because for that sum S, we have (zeta - 1)S = zeta^(n+1) - zeta = 0, and zeta \u2260 1.\r\n> \r\n>     * In fact, for any 0<i<n, we have zeta^i + zeta^(2i) + ... + zeta^(ni) = 0. Indeed, for this sum S, we have (zeta^i - 1) S = zeta^((n+1)i) - zeta^i = zeta^i - zeta^i = 0. As zeta^i \u2260 1 by definition of PROU, we have S = 0 as desired.\r\n> \r\n>     * zeta, zeta^2, ..., zeta^n are all distinct, for if zeta^i = zeta^j with WLOG i > j, then zeta^(i-j)=1 contradicting n being a PROU.\r\n\r\n\u2764\ufe0f \r\n\r\n\r\n> Now, pick a random field element y not in {0,1}, and set x_1 = 0, x_2 = y, x_3 = y, ..., x_n = y.\r\n> \r\n> Then for any 0 < i < n, we have p(zeta^i) = y(1-y) ( zeta^i + zeta^(2i) + ... + zeta^(ni) ) = 0.\r\n> \r\n> Thus, first precompute Z = { zeta^1, ..., zeta^(n-1) }.\r\n> \r\n> Then search for an y \u2260 0, 1 such that H( 0, y, y, ..., y ) in Z.\r\n\r\nI.e., fix coins for secret sharing and generating blinds and for each $y \\in \\mathbb{F}\\setminus \\\\{0,1\\\\}$ and compute $r = H([[\\vec x]]_1, ..., [[\\vec x]]_s, B_1, \\ldots, B_s)$. Stop when $r \\in Z$.\r\n\r\n> \r\n> When found, we have broken robustness. Note that in any interesting case, essentially all time of the attack is spent in computing H.\r\n> \r\n> With n = 2^20, and we're using a 64 bit field, we expect only 2^44 calls to H. That's practical.\r\n> \r\n> When requiring two proofs for that 64 bit field, we're looking at 2^88 calls to H. That's possible to pull of, but _very_ expensive (>10M$).\r\n\r\nI'd like to come up with a formula. Modeling $H$ as a random oracles it's just a series of independent Bernoulli's with probability $p = (|Z|/|\\mathbb{F}|)^k = (n/|\\mathbb{F}|)^k$ and we go until one of them succeeds.\r\n\r\nThat means the success probability after $q$ random oracle queries is $(1 - p)^q \\cdot p$, and the expected number of random oracles queries we have to make is $1/p = (|\\mathbb{F}|/n)^k$.\r\n\r\nThis confirms your math. It does seem like you could pull off $2^{88}$ evaluations of $H$ but it would require immense resources. For scale, here's a website that estimates humanity's Bitcoin-mining capacity, which is a pretty good approximation of the resources we have to break Prio: https://www.coinwarz.com/mining/bitcoin/hashrate-chart\r\n\r\nFor the record, `Field128` with one proof and `Field64` with three proofs are both definitely safe (expected $q$ of $2^{108}$ and $2^{132}$ respectively).",
           "createdAt": "2023-12-16T01:53:02Z",
-          "updatedAt": "2023-12-16T01:59:03Z"
+          "updatedAt": "2023-12-18T16:16:54Z"
         }
       ]
     },
@@ -4852,6 +4852,22 @@
       "body": "When thinking about Prio3 robustness (ia.cr/2023/130, Theorem 1) we (err, I, really) have been ignoring the term that depends on the size of the seed: $(q_\\text{RG} + {q_{\\text{Prep}}}^2) / 2^{\\kappa -1}$\r\n\r\n* $q_\\text{RG}$ - the number of random oracle queries (XofTurboShake128 is modeled as an RO)\r\n* $q_\\text{Prep}$ - the number of (potentially malicious) reports consumed in a given DAP task\r\n* $\\kappa$ - the seed size (16 bytes for XofTurboShake128)\r\n\r\nAs @albertpl pointed out in https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/318#discussion_r1416669600, the bound becomes vacuous after $q_\\text{Prep}=2^{63.5}$ reports (since $(2^{63.5})^2 = 2^{\\kappa -1}$).\r\n\r\nWhile it's doubtful that we'd ever consume so many reports in a single task, it's not a bad idea to have a more conservative safety margin. 32 bytes seems like a reasonable choice.",
       "createdAt": "2023-12-07T22:57:31Z",
       "updatedAt": "2023-12-07T22:59:48Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 321,
+      "id": "I_kwDOGKuqOc56DZEC",
+      "title": "poc: TurboSHAKE128: Replace reference implementation with a stateful version",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/321",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We currently impose a limit on the number of bytes output by `XofTurboShake128` due to the inefficiency of the current implementation. Replace the stateless implementation with a stateful one and remove the limit.",
+      "createdAt": "2023-12-19T00:22:46Z",
+      "updatedAt": "2023-12-19T00:22:47Z",
       "closedAt": null,
       "comments": []
     }
@@ -26657,6 +26673,48 @@
               "updatedAt": "2023-12-07T16:29:34Z"
             }
           ]
+        }
+      ]
+    },
+    {
+      "number": 320,
+      "id": "PR_kwDOGKuqOc5iMdYe",
+      "title": "Infer relative path of kangerootwelve",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/320",
+      "state": "MERGED",
+      "author": "junyechen1996",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This will resolve two problems:\r\n- When another repo tries to submodule this repo, we won't hit problems when trying to import kangerootwelve\r\n- We don't always have to run unit tests from the \"poc\" folder, e.g., I can still run unit tests from the root directory of this repo, sage -python poc/vdaf_prio3.py",
+      "createdAt": "2023-12-17T20:00:42Z",
+      "updatedAt": "2023-12-18T15:18:51Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "cb5433b91163a2bc36b0f6ac6d1a84405e6634c2",
+      "headRepository": "junyechen1996/draft-irtf-cfrg-vdaf",
+      "headRefName": "junyec/use-relative-path",
+      "headRefOid": "d8c9709c93ec4ab61657e4540b4a3160e35d0b86",
+      "closedAt": "2023-12-18T15:18:50Z",
+      "mergedAt": "2023-12-18T15:18:50Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "3d2dd77befcf149c818b4bae1744e60c00d0a4f3"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5qhaiz",
+          "commit": {
+            "abbreviatedOid": "d8c9709"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "\ud83d\udc4d ",
+          "createdAt": "2023-12-18T15:18:44Z",
+          "updatedAt": "2023-12-18T15:18:44Z",
+          "comments": []
         }
       ]
     }
