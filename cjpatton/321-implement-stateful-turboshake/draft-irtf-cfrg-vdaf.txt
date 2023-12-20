@@ -5,12 +5,12 @@
 CFRG                                                        R. L. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                                   D. Cook
-Expires: 23 May 2024                                                ISRG
+Expires: 22 June 2024                                               ISRG
                                                                C. Patton
                                                               Cloudflare
                                                            P. Schoppmann
                                                                   Google
-                                                        20 November 2023
+                                                        20 December 2023
 
 
               Verifiable Distributed Aggregation Functions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 May 2024.
+   This Internet-Draft will expire on 22 June 2024.
 
 Copyright Notice
 
@@ -4982,9 +4982,9 @@ def eval_next(IdpfPoplar, prev_seed, prev_ctrl,
    [TurboSHAKE]
               Viguier, B., Wong, D., Van Assche, G., Dang, Q., and J.
               Daemen, "KangarooTwelve and TurboSHAKE", Work in Progress,
-              Internet-Draft, draft-irtf-cfrg-kangarootwelve-11, 20 June
-              2023, <https://datatracker.ietf.org/doc/html/draft-irtf-
-              cfrg-kangarootwelve-11>.
+              Internet-Draft, draft-irtf-cfrg-kangarootwelve-12, 18
+              December 2023, <https://datatracker.ietf.org/doc/html/
+              draft-irtf-cfrg-kangarootwelve-12>.
 
 11.2.  Informative References
 
@@ -5007,12 +5007,12 @@ def eval_next(IdpfPoplar, prev_seed, prev_ctrl,
               2017 , 2017,
               <https://dl.acm.org/doi/10.5555/3154630.3154652>.
 
-   [DAP]      Geoghegan, T., Patton, C., Rescorla, E., and C. A. Wood,
-              "Distributed Aggregation Protocol for Privacy Preserving
-              Measurement", Work in Progress, Internet-Draft, draft-
-              ietf-ppm-dap-08, 23 October 2023,
+   [DAP]      Geoghegan, T., Patton, C., Pitman, B., Rescorla, E., and
+              C. A. Wood, "Distributed Aggregation Protocol for Privacy
+              Preserving Measurement", Work in Progress, Internet-Draft,
+              draft-ietf-ppm-dap-09, 18 December 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ppm-dap-
-              08>.
+              09>.
 
    [Dou02]    Douceur, J., "The Sybil Attack", IPTPS 2002 , 2002,
               <https://doi.org/10.1007/3-540-45748-8_24>.
