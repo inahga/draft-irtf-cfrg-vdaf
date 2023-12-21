@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-12-19T00:43:24.836568+00:00",
+  "timestamp": "2023-12-21T00:42:06.377033+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -26717,6 +26717,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 322,
+      "id": "PR_kwDOGKuqOc5igJja",
+      "title": "poc: Reduce test runtime by making TurboSHAKE128 stateful",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/322",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #321.\r\n\r\nThe reference implementation of TurboSHAKE128 provides a one-shot API. To use this efficiently, we restrict the number of bytes required for tests so that we can pre-compute the entire output buffer. This is controlled by MAX_XOF_OUT_STREAM_BYTES.\r\n\r\nThis restriction is confusing and has side-effects for specs that use XofTurboShake128. However using the one-shot API without this optimization makes the unit tests prohibitively slow, about a minute on my machine.\r\n\r\nImplement a stateful API for TurboSHAKE128 and use it in XofTurboShake128. This reduces the runtime to 20 seconds on my machine.\r\n\r\nAccordingly, restore the unit tests for Poplar1 to what they were before we made this optimization.\r\n\r\ncc/ @junyechen1996 ",
+      "createdAt": "2023-12-20T19:13:56Z",
+      "updatedAt": "2023-12-20T19:22:11Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "3d2dd77befcf149c818b4bae1744e60c00d0a4f3",
+      "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "headRefName": "cjpatton/321-implement-stateful-turboshake",
+      "headRefOid": "dda6990b53c2b7270071b2757a2bfe921cb87b57",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
