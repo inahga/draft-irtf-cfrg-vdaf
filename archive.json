@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-07T00:47:24.020493+00:00",
+  "timestamp": "2024-01-09T00:43:25.132403+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -26730,7 +26730,7 @@
       "labels": [],
       "body": "Closes #321.\r\n\r\nThe reference implementation of TurboSHAKE128 provides a one-shot API. To use this efficiently, we restrict the number of bytes required for tests so that we can pre-compute the entire output buffer. This is controlled by MAX_XOF_OUT_STREAM_BYTES.\r\n\r\nThis restriction is confusing and has side-effects for specs that use XofTurboShake128. However using the one-shot API without this optimization makes the unit tests prohibitively slow, about a minute on my machine.\r\n\r\nImplement a stateful API for TurboSHAKE128 and use it in XofTurboShake128. This reduces the runtime to 20 seconds on my machine.\r\n\r\nAccordingly, restore the unit tests for Poplar1 to what they were before we made this optimization.\r\n\r\ncc/ @junyechen1996 ",
       "createdAt": "2023-12-20T19:13:56Z",
-      "updatedAt": "2023-12-20T19:22:11Z",
+      "updatedAt": "2024-01-09T00:19:33Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "3d2dd77befcf149c818b4bae1744e60c00d0a4f3",
@@ -26741,7 +26741,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Reviewer note: Eventually we'll be able to use PyCryptodome instead: https://github.com/Legrandin/pycryptodome/issues/780\r\n",
+          "createdAt": "2024-01-09T00:19:33Z",
+          "updatedAt": "2024-01-09T00:19:33Z"
+        }
+      ],
       "reviews": []
     }
   ]
