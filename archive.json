@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-09T00:43:25.132403+00:00",
+  "timestamp": "2024-01-11T00:43:28.334023+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4860,14 +4860,30 @@
       "id": "I_kwDOGKuqOc56DZEC",
       "title": "poc: TurboSHAKE128: Replace reference implementation with a stateful version",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/321",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "We currently impose a limit on the number of bytes output by `XofTurboShake128` due to the inefficiency of the current implementation. Replace the stateless implementation with a stateful one and remove the limit.",
       "createdAt": "2023-12-19T00:22:46Z",
-      "updatedAt": "2023-12-19T00:22:47Z",
+      "updatedAt": "2024-01-10T02:58:20Z",
+      "closedAt": "2024-01-10T02:58:20Z",
+      "comments": []
+    },
+    {
+      "number": 323,
+      "id": "I_kwDOGKuqOc57lv9I",
+      "title": "poc: Use PyCryptodome for TurboSHAKE",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/323",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As of this writing, PyCryptodome does not support TurboSHAKE. However the next release will: https://github.com/Legrandin/pycryptodome/issues/780\r\n\r\nIn the meantime, we are using our own implementation: https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/322\r\n\r\nOnce a PyCryptodome is released with support TurboSHAKE, use it instead.",
+      "createdAt": "2024-01-10T02:57:09Z",
+      "updatedAt": "2024-01-10T02:57:09Z",
       "closedAt": null,
       "comments": []
     }
@@ -26723,24 +26739,26 @@
       "id": "PR_kwDOGKuqOc5igJja",
       "title": "poc: Reduce test runtime by making TurboSHAKE128 stateful",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/322",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #321.\r\n\r\nThe reference implementation of TurboSHAKE128 provides a one-shot API. To use this efficiently, we restrict the number of bytes required for tests so that we can pre-compute the entire output buffer. This is controlled by MAX_XOF_OUT_STREAM_BYTES.\r\n\r\nThis restriction is confusing and has side-effects for specs that use XofTurboShake128. However using the one-shot API without this optimization makes the unit tests prohibitively slow, about a minute on my machine.\r\n\r\nImplement a stateful API for TurboSHAKE128 and use it in XofTurboShake128. This reduces the runtime to 20 seconds on my machine.\r\n\r\nAccordingly, restore the unit tests for Poplar1 to what they were before we made this optimization.\r\n\r\ncc/ @junyechen1996 ",
       "createdAt": "2023-12-20T19:13:56Z",
-      "updatedAt": "2024-01-09T00:19:33Z",
+      "updatedAt": "2024-01-10T02:58:19Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "3d2dd77befcf149c818b4bae1744e60c00d0a4f3",
       "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "headRefName": "cjpatton/321-implement-stateful-turboshake",
       "headRefOid": "dda6990b53c2b7270071b2757a2bfe921cb87b57",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-01-10T02:58:19Z",
+      "mergedAt": "2024-01-10T02:58:19Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "97fcdd4e159767ced633d373397b7048901f7d29"
+      },
       "comments": [
         {
           "author": "cjpatton",
@@ -26750,7 +26768,21 @@
           "updatedAt": "2024-01-09T00:19:33Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5sAJh4",
+          "commit": {
+            "abbreviatedOid": "dda6990"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-09T20:44:45Z",
+          "updatedAt": "2024-01-09T20:44:45Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
