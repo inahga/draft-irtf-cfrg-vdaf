@@ -2274,10 +2274,11 @@ class XofFixedKeyAes128(Xof):
    meas is invalid, then as long as joint_rand and query_rand are
    generated uniform randomly, the output is False with high
    probability.  False positives are possible: there is a small
-   probability that a verifier accepts an invalid input as valid.An FLP
-   is said to be "sound" if this probability is sufficiently small.  The
-   soundness of the FLP depends on its parameters, like like the length
-   of the input and the size of the field.  See Section 7.3 for details.
+   probability that a verifier accepts an invalid input as valid.  An
+   FLP is said to be "sound" if this probability is sufficiently small.
+   The soundness of the FLP depends on a variety of parameters, like
+   like the length of the input and the size of the field.  See
+   Section 7.3 for details.
 
    We remark that [BBCGGI19] defines a much larger class of fully linear
    proof systems than we consider here.  In particular, what is called
@@ -4939,22 +4940,22 @@ def eval_next(IdpfPoplar, prev_seed, prev_ctrl,
    may benefit from choosing a field size that is as small as possible.
    Generally speaking, a smaller field results in lower communication
    and storage costs.  Care must be taken, however, since a smaller
-   field results in lower (or even vacuous) robustness.
+   field also results in degraded (or even vacuous) robustness.
 
    Different variants of Prio3 (Section 7) use different field sizes:
    Prio3Count uses Field64; but Prio3Sum, Prio3SumVec, and
    Prio3Histogram use Field128, a field that is twice as large as
-   Field64.  This is due to the use of joint randomness in the latter
-   variants (Prio3Count does not use joint randomness).  Joint
-   randomness allows for more flexible circuit design (see
-   Section 7.3.1.1), but opens up Prio3 to pre-computation attacks,
-   which the larger field mitigates.  (See [DPRS23], Theorem 1.)  Note
-   that privacy is not susceptible to such attaacks.
+   Field64.  This is due to the use of joint randomness (Section 7.1) in
+   the latter variants.  Joint randomness allows for more flexible
+   circuit design (see Section 7.3.1.1), but opens up Prio3 to
+   precomputation attacks, which the larger field mitigates.  (See
+   [DPRS23], Theorem 1.)  Note that privacy is not susceptible to such
+   attacks.
 
-   Another way to mitigate this issue (or in improve robustness in
-   general) is to generate and verify multiple, independent proofs.
-   (See Section 7.1.2.)  For Prio3, the PROOFS parameter controls the
-   number of proofs (at least one) that are generated and verified.
+   Another way to mitigate this issue (or improve robustness in general)
+   is to generate and verify multiple, independent proofs.  (See
+   Section 7.1.2.)  For Prio3, the PROOFS parameter controls the number
+   of proofs (at least one) that are generated and verified.
 
    In general, Field128 is RECOMMENDED for use in Prio3 when the circuit
    uses joint randomness (JOINT_RAND_LEN > 0) and PROOFS == 1.  Field64

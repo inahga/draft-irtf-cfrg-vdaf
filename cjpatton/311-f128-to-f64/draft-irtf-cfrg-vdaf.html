@@ -4001,10 +4001,10 @@ def run_flp(flp, meas: Vec[Flp.Field], num_shares: Unsigned):
 meas, 1)</code> always returns <code>True</code>. On the other hand, if <code>meas</code> is invalid, then
 as long as <code>joint_rand</code> and <code>query_rand</code> are generated uniform randomly, the
 output is <code>False</code> with high probability. False positives are possible: there is
-a small probability that a verifier accepts an invalid input as valid.An FLP
+a small probability that a verifier accepts an invalid input as valid. An FLP
 is said to be "sound" if this probability is sufficiently small. The soundness
-of the FLP depends on its parameters, like like the length of the input and the
-size of the field. See <a href="#flp-generic" class="auto internal xref">Section 7.3</a> for details.<a href="#section-7.1-11" class="pilcrow">¶</a></p>
+of the FLP depends on a variety of parameters, like like the length of the
+input and the size of the field. See <a href="#flp-generic" class="auto internal xref">Section 7.3</a> for details.<a href="#section-7.1-11" class="pilcrow">¶</a></p>
 <p id="section-7.1-12">We remark that <span>[<a href="#BBCGGI19" class="cite xref">BBCGGI19</a>]</span> defines a much larger class of fully linear proof
 systems than we consider here. In particular, what is called an "FLP" here is
 called a 1.5-round, public-coin, interactive oracle proof system in their paper.<a href="#section-7.1-12" class="pilcrow">¶</a></p>
@@ -4062,7 +4062,7 @@ to the notion of "Affine-aggregatable encodings (AFEs)" from <span>[<a href="#CG
 <p id="section-7.1.2-1">It is sometimes desirable to generate and verify multiple independent proofs
 for the same input. First, this improves the soundness of the proof system
 without having to change any of its parameters. Second, it allows a smaller
-field to be used (e.g., replace <code>Field128</code> with <code>Field64</code>, see <a href="#flp-generic" class="auto internal xref">Section 7.3</a>)
+field to be used (e.g., replace Field128 with Field64, see <a href="#flp-generic" class="auto internal xref">Section 7.3</a>)
 without sacrificing soundness. Generally, choosing a smaller field can
 significantly reduce communication cost. (This is a trade-off, of course, since
 generating and verifying more proofs requires more time.) Given these benefits,
@@ -7700,17 +7700,16 @@ evaluated by the helpers.<a href="#section-9.4-6" class="pilcrow">¶</a></p>
 <p id="section-9.5-1">Prio3 and other systems built from FLPs (<a href="#flp-generic" class="auto internal xref">Section 7.3</a> in particular) may
 benefit from choosing a field size that is as small as possible. Generally
 speaking, a smaller field results in lower communication and storage costs.
-Care must be taken, however, since a smaller field results in lower (or even
-vacuous) robustness.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
+Care must be taken, however, since a smaller field also results in degraded (or
+even vacuous) robustness.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
 <p id="section-9.5-2">Different variants of Prio3 (<a href="#prio3" class="auto internal xref">Section 7</a>) use different field sizes: Prio3Count
 uses Field64; but Prio3Sum, Prio3SumVec, and Prio3Histogram use Field128, a
 field that is twice as large as Field64. This is due to the use of joint
-randomness in the latter variants (Prio3Count does not use joint randomness).
-Joint randomness allows for more flexible circuit design (see
-<a href="#flp-generic-overview-extensions" class="auto internal xref">Section 7.3.1.1</a>), but opens up Prio3 to pre-computation
-attacks, which the larger field mitigates. (See <span>[<a href="#DPRS23" class="cite xref">DPRS23</a>]</span>, Theorem 1.) Note
-that privacy is not susceptible to such attaacks.<a href="#section-9.5-2" class="pilcrow">¶</a></p>
-<p id="section-9.5-3">Another way to mitigate this issue (or in improve robustness in general) is to
+randomness (<a href="#flp" class="auto internal xref">Section 7.1</a>) in the latter variants. Joint randomness allows for more
+flexible circuit design (see <a href="#flp-generic-overview-extensions" class="auto internal xref">Section 7.3.1.1</a>), but opens up
+Prio3 to precomputation attacks, which the larger field mitigates. (See
+<span>[<a href="#DPRS23" class="cite xref">DPRS23</a>]</span>, Theorem 1.) Note that privacy is not susceptible to such attacks.<a href="#section-9.5-2" class="pilcrow">¶</a></p>
+<p id="section-9.5-3">Another way to mitigate this issue (or improve robustness in general) is to
 generate and verify multiple, independent proofs. (See <a href="#multiproofs" class="auto internal xref">Section 7.1.2</a>.) For
 Prio3, the <code>PROOFS</code> parameter controls the number of proofs (at least one) that
 are generated and verified.<a href="#section-9.5-3" class="pilcrow">¶</a></p>
