@@ -5,12 +5,12 @@
 CFRG                                                        R. L. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                                   D. Cook
-Expires: 14 July 2024                                               ISRG
+Expires: 15 July 2024                                               ISRG
                                                                C. Patton
                                                               Cloudflare
                                                            P. Schoppmann
                                                                   Google
-                                                         11 January 2024
+                                                         12 January 2024
 
 
               Verifiable Distributed Aggregation Functions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 July 2024.
+   This Internet-Draft will expire on 15 July 2024.
 
 Copyright Notice
 
@@ -4959,7 +4959,7 @@ def eval_next(IdpfPoplar, prev_seed, prev_ctrl,
 
    In general, Field128 is RECOMMENDED for use in Prio3 when the circuit
    uses joint randomness (JOINT_RAND_LEN > 0) and PROOFS == 1.  Field64
-   MAY be used instead, but PROOFS MUST be set to 3.  Breaking
+   MAY be used instead, but PROOFS MUST be set to at least 3.  Breaking
    robustness for PROOFS == 2 is feasible, if impractical; but PROOFS ==
    1 is completely broken for such a small field.
 
