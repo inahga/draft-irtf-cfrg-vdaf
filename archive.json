@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-11T00:43:28.334023+00:00",
+  "timestamp": "2024-01-14T00:47:41.946124+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4876,15 +4876,17 @@
       "id": "I_kwDOGKuqOc57lv9I",
       "title": "poc: Use PyCryptodome for TurboSHAKE",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/323",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
-      "assignees": [],
+      "assignees": [
+        "cjpatton"
+      ],
       "labels": [],
       "body": "As of this writing, PyCryptodome does not support TurboSHAKE. However the next release will: https://github.com/Legrandin/pycryptodome/issues/780\r\n\r\nIn the meantime, we are using our own implementation: https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/322\r\n\r\nOnce a PyCryptodome is released with support TurboSHAKE, use it instead.",
       "createdAt": "2024-01-10T02:57:09Z",
-      "updatedAt": "2024-01-10T02:57:09Z",
-      "closedAt": null,
+      "updatedAt": "2024-01-11T19:58:23Z",
+      "closedAt": "2024-01-11T19:58:23Z",
       "comments": []
     }
   ],
@@ -26781,6 +26783,228 @@
           "createdAt": "2024-01-09T20:44:45Z",
           "updatedAt": "2024-01-09T20:44:45Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 324,
+      "id": "PR_kwDOGKuqOc5j2ZWt",
+      "title": "Use PyCryptodomex's implementation of TurboSHAKE128",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/324",
+      "state": "MERGED",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #323.\r\n\r\nSupport for TurboSHAKE was recently (as of version 3.20.0) added to PyCryptodomex. Use it instead of our own implementation and remove our implementation.\r\n\r\nAccordingly, remove the draft-irtf-cfrg-kangarootwelve submodule, as we no longer need it for interop testing with our code.\r\n\r\nNote that PyCryptodomex can be upgraded with:\r\n\r\n$ sage -pip install --upgrade pycryptodomex",
+      "createdAt": "2024-01-11T19:26:13Z",
+      "updatedAt": "2024-01-11T19:58:36Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "97fcdd4e159767ced633d373397b7048901f7d29",
+      "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "headRefName": "cjpatton/323",
+      "headRefOid": "1cd5941e6dbc6ced4149518ccc73a36e2bdc843f",
+      "closedAt": "2024-01-11T19:58:22Z",
+      "mergedAt": "2024-01-11T19:58:22Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "2c7a6817c21f618c72c16609aea03d05be0c638c"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5sRI04",
+          "commit": {
+            "abbreviatedOid": "b95ebf7"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-11T19:32:35Z",
+          "updatedAt": "2024-01-11T19:32:36Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "This should install `pycryptodomex` instead, per `poc/README.md`. The two PyPI packages get imported differently.",
+              "createdAt": "2024-01-11T19:32:36Z",
+              "updatedAt": "2024-01-11T19:32:36Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sRPrL",
+          "commit": {
+            "abbreviatedOid": "b95ebf7"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-11T19:43:06Z",
+          "updatedAt": "2024-01-11T19:43:06Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "What about just importing AES from Crypto instead of Cryptodome. I've updated the README to install pycryptodome instead of pycryptodomex.\r\n\r\nDoes that work for you, or might there be an enviernment where this doesn't work? CI seems happy, as well as my Mac.",
+              "createdAt": "2024-01-11T19:43:06Z",
+              "updatedAt": "2024-01-11T19:43:06Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sRSjj",
+          "commit": {
+            "abbreviatedOid": "b95ebf7"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-11T19:47:19Z",
+          "updatedAt": "2024-01-11T19:47:19Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Yeah, this should be fine, so long as we're consistent. This would preclude someone from installing PyCrypto in the same Sage install, but hopefully that's not a common occurrence.",
+              "createdAt": "2024-01-11T19:47:19Z",
+              "updatedAt": "2024-01-11T19:47:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sRWbZ",
+          "commit": {
+            "abbreviatedOid": "362d1f4"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-11T19:52:56Z",
+          "updatedAt": "2024-01-11T19:52:56Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sRXLY",
+          "commit": {
+            "abbreviatedOid": "b95ebf7"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-11T19:54:01Z",
+          "updatedAt": "2024-01-11T19:54:01Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Hmm actually that's a good call. In fact I think that's what we intended when we decided to use PyCryptodomex in the first place.",
+              "createdAt": "2024-01-11T19:54:01Z",
+              "updatedAt": "2024-01-11T19:54:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sRX9K",
+          "commit": {
+            "abbreviatedOid": "b95ebf7"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-11T19:55:13Z",
+          "updatedAt": "2024-01-11T19:55:14Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "Replaced Crypto with Cryptodome.",
+              "createdAt": "2024-01-11T19:55:13Z",
+              "updatedAt": "2024-01-11T19:55:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sRYTy",
+          "commit": {
+            "abbreviatedOid": "1cd5941"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM, test vectors are unchanged to boot.",
+          "createdAt": "2024-01-11T19:55:48Z",
+          "updatedAt": "2024-01-11T19:55:48Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 325,
+      "id": "PR_kwDOGKuqOc5j3SXR",
+      "title": "Add guidance for choosing the field size",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/325",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Closes #311.\r\n\r\nFor Prio3, when joint randomness is used:\r\n\r\n* RECOMMEND Field128\r\n* Field64 MAY be used, but `PROOFS` MUST be `3`\r\n\r\nThe latter is motivated by issue #177. The recommendation is based on the upper bound given by {{DPRS23}}, Theorem 1 and a matching attack described by @bwesterb (see issue #311).",
+      "createdAt": "2024-01-11T22:13:34Z",
+      "updatedAt": "2024-01-12T15:26:13Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "2c7a6817c21f618c72c16609aea03d05be0c638c",
+      "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "headRefName": "cjpatton/311-f128-to-f64",
+      "headRefOid": "43d7b22cbfcfdfaac14fd6cb9f7af384a6ecfbda",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5sVhrO",
+          "commit": {
+            "abbreviatedOid": "fa04ac5"
+          },
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-12T07:47:49Z",
+          "updatedAt": "2024-01-12T07:47:49Z",
+          "comments": [
+            {
+              "originalPosition": 80,
+              "body": "Perhaps \u22653 instead of =3?",
+              "createdAt": "2024-01-12T07:47:49Z",
+              "updatedAt": "2024-01-12T07:47:49Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sVh44",
+          "commit": {
+            "abbreviatedOid": "fa04ac5"
+          },
+          "author": "bwesterb",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-12T07:48:23Z",
+          "updatedAt": "2024-01-12T07:48:23Z",
+          "comments": [
+            {
+              "originalPosition": 80,
+              "body": "For the rest, lgtm.",
+              "createdAt": "2024-01-12T07:48:23Z",
+              "updatedAt": "2024-01-12T07:48:23Z"
+            }
+          ]
         }
       ]
     }
