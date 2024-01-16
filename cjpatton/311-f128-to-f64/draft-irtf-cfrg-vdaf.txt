@@ -5,12 +5,12 @@
 CFRG                                                        R. L. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                                   D. Cook
-Expires: 15 July 2024                                               ISRG
+Expires: 19 July 2024                                               ISRG
                                                                C. Patton
                                                               Cloudflare
                                                            P. Schoppmann
                                                                   Google
-                                                         12 January 2024
+                                                         16 January 2024
 
 
               Verifiable Distributed Aggregation Functions
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 July 2024.
+   This Internet-Draft will expire on 19 July 2024.
 
 Copyright Notice
 
@@ -2276,9 +2276,9 @@ class XofFixedKeyAes128(Xof):
    probability.  False positives are possible: there is a small
    probability that a verifier accepts an invalid input as valid.  An
    FLP is said to be "sound" if this probability is sufficiently small.
-   The soundness of the FLP depends on a variety of parameters, like
-   like the length of the input and the size of the field.  See
-   Section 7.3 for details.
+   The soundness of the FLP depends on a variety of parameters, like the
+   length of the input and the size of the field.  See Section 7.3 for
+   details.
 
    We remark that [BBCGGI19] defines a much larger class of fully linear
    proof systems than we consider here.  In particular, what is called
