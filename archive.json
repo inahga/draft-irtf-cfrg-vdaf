@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-14T00:47:41.946124+00:00",
+  "timestamp": "2024-01-16T00:43:04.837528+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -26953,7 +26953,7 @@
       "labels": [],
       "body": "Closes #311.\r\n\r\nFor Prio3, when joint randomness is used:\r\n\r\n* RECOMMEND Field128\r\n* Field64 MAY be used, but `PROOFS` MUST be `3`\r\n\r\nThe latter is motivated by issue #177. The recommendation is based on the upper bound given by {{DPRS23}}, Theorem 1 and a matching attack described by @bwesterb (see issue #311).",
       "createdAt": "2024-01-11T22:13:34Z",
-      "updatedAt": "2024-01-12T15:26:13Z",
+      "updatedAt": "2024-01-15T19:20:34Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "2c7a6817c21f618c72c16609aea03d05be0c638c",
@@ -27003,6 +27003,66 @@
               "body": "For the rest, lgtm.",
               "createdAt": "2024-01-12T07:48:23Z",
               "updatedAt": "2024-01-12T07:48:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5sm8pz",
+          "commit": {
+            "abbreviatedOid": "43d7b22"
+          },
+          "author": "wangshan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-15T18:50:14Z",
+          "updatedAt": "2024-01-15T18:50:14Z",
+          "comments": [
+            {
+              "originalPosition": 8,
+              "body": "```suggestion\r\nof the FLP depends on a variety of parameters, like the length of the\r\n```",
+              "createdAt": "2024-01-15T18:50:14Z",
+              "updatedAt": "2024-01-15T18:50:14Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5snCBv",
+          "commit": {
+            "abbreviatedOid": "43d7b22"
+          },
+          "author": "wangshan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-15T19:17:28Z",
+          "updatedAt": "2024-01-15T19:17:29Z",
+          "comments": [
+            {
+              "originalPosition": 78,
+              "body": "should we add a section to quantify the risk of using 2 PROOFS vs 3?",
+              "createdAt": "2024-01-15T19:17:29Z",
+              "updatedAt": "2024-01-15T19:17:29Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5snClu",
+          "commit": {
+            "abbreviatedOid": "43d7b22"
+          },
+          "author": "wangshan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-15T19:20:34Z",
+          "updatedAt": "2024-01-15T19:20:34Z",
+          "comments": [
+            {
+              "originalPosition": 78,
+              "body": "here soundness is not mentioned, while it was in #multiproofs. Should we mention the relationship between soundness and robustness (which is the overall goal) here?",
+              "createdAt": "2024-01-15T19:20:34Z",
+              "updatedAt": "2024-01-15T19:20:34Z"
             }
           ]
         }
