@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-16T00:43:04.837528+00:00",
+  "timestamp": "2024-01-18T00:43:44.860565+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -26953,13 +26953,13 @@
       "labels": [],
       "body": "Closes #311.\r\n\r\nFor Prio3, when joint randomness is used:\r\n\r\n* RECOMMEND Field128\r\n* Field64 MAY be used, but `PROOFS` MUST be `3`\r\n\r\nThe latter is motivated by issue #177. The recommendation is based on the upper bound given by {{DPRS23}}, Theorem 1 and a matching attack described by @bwesterb (see issue #311).",
       "createdAt": "2024-01-11T22:13:34Z",
-      "updatedAt": "2024-01-15T19:20:34Z",
+      "updatedAt": "2024-01-16T17:04:50Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "2c7a6817c21f618c72c16609aea03d05be0c638c",
       "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "headRefName": "cjpatton/311-f128-to-f64",
-      "headRefOid": "43d7b22cbfcfdfaac14fd6cb9f7af384a6ecfbda",
+      "headRefOid": "fcc9f91eca6d7585dace3d29bbdfb45f9ea0ae4a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -27063,6 +27063,26 @@
               "body": "here soundness is not mentioned, while it was in #multiproofs. Should we mention the relationship between soundness and robustness (which is the overall goal) here?",
               "createdAt": "2024-01-15T19:20:34Z",
               "updatedAt": "2024-01-15T19:20:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5su3K3",
+          "commit": {
+            "abbreviatedOid": "fcc9f91"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-16T17:04:38Z",
+          "updatedAt": "2024-01-16T17:04:38Z",
+          "comments": [
+            {
+              "originalPosition": 78,
+              "body": "Can you clarify: 2 proofs for Field128 or Field64?\r\n\r\nConnecting soundness and robustness is a good idea, will do.",
+              "createdAt": "2024-01-16T17:04:38Z",
+              "updatedAt": "2024-01-16T17:04:38Z"
             }
           ]
         }
