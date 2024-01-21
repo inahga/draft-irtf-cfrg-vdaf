@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-18T00:43:44.860565+00:00",
+  "timestamp": "2024-01-21T00:47:50.784514+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -26953,7 +26953,7 @@
       "labels": [],
       "body": "Closes #311.\r\n\r\nFor Prio3, when joint randomness is used:\r\n\r\n* RECOMMEND Field128\r\n* Field64 MAY be used, but `PROOFS` MUST be `3`\r\n\r\nThe latter is motivated by issue #177. The recommendation is based on the upper bound given by {{DPRS23}}, Theorem 1 and a matching attack described by @bwesterb (see issue #311).",
       "createdAt": "2024-01-11T22:13:34Z",
-      "updatedAt": "2024-01-16T17:04:50Z",
+      "updatedAt": "2024-01-18T19:58:43Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
       "baseRefOid": "2c7a6817c21f618c72c16609aea03d05be0c638c",
@@ -27085,6 +27085,19 @@
               "updatedAt": "2024-01-16T17:04:38Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tGqSD",
+          "commit": {
+            "abbreviatedOid": "fcc9f91"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good. I think we should also add `| PROOFS | 1 |` to tables 9, 10, 11, and 12, right after `Field`, to be clear about the parameter values for the four concrete Prio3 VDAFs (and algorithm IDs) we define.",
+          "createdAt": "2024-01-18T19:58:43Z",
+          "updatedAt": "2024-01-18T19:58:43Z",
+          "comments": []
         }
       ]
     }
