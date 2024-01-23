@@ -2280,6 +2280,11 @@ class XofFixedKeyAes128(Xof):
    length of the input and the size of the field.  See Section 7.3 for
    details.
 
+   Note that soundness of an FLP system is not the same as robustness
+   for a VDAF In particular, soundness of the FLP is necessary, but
+   insufficient for robusntess of Prio3 (Section 7).  See Section 9.5
+   for details.
+
    We remark that [BBCGGI19] defines a much larger class of fully linear
    proof systems than we consider here.  In particular, what is called
    an "FLP" here is called a 1.5-round, public-coin, interactive oracle
