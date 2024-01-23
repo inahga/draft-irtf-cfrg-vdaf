@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-21T00:47:50.784514+00:00",
+  "timestamp": "2024-01-23T00:44:21.365218+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -27097,6 +27097,121 @@
           "body": "Looks good. I think we should also add `| PROOFS | 1 |` to tables 9, 10, 11, and 12, right after `Field`, to be clear about the parameter values for the four concrete Prio3 VDAFs (and algorithm IDs) we define.",
           "createdAt": "2024-01-18T19:58:43Z",
           "updatedAt": "2024-01-18T19:58:43Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 326,
+      "id": "PR_kwDOGKuqOc5kuV9R",
+      "title": "Improvements to test vector generation",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/326",
+      "state": "MERGED",
+      "author": "junyechen1996",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Add an environmental variable TEST_VECTOR to control test vector generation, and an optional environmental variable TEST_VECTOR_PATH to specify a custom path where test vectors are generated. Add a new target in Makefile to generate all test vectors in VDAF spec.",
+      "createdAt": "2024-01-22T13:48:14Z",
+      "updatedAt": "2024-01-22T20:16:57Z",
+      "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
+      "baseRefName": "main",
+      "baseRefOid": "2c7a6817c21f618c72c16609aea03d05be0c638c",
+      "headRepository": "junyechen1996/draft-irtf-cfrg-vdaf",
+      "headRefName": "junyec/test-vector-improvement",
+      "headRefOid": "8510618ce9d42d8721756a009f0ff2db5ce9b495",
+      "closedAt": "2024-01-22T20:16:56Z",
+      "mergedAt": "2024-01-22T20:16:56Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "b87c2d6e2169ba2801f14f63abc24723d03c8da6"
+      },
+      "comments": [
+        {
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Squashed. Should be good to merge after CI.",
+          "createdAt": "2024-01-22T18:45:45Z",
+          "updatedAt": "2024-01-22T18:45:45Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGKuqOc5teKcP",
+          "commit": {
+            "abbreviatedOid": "08cbe13"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Great idea! One minor suggestion.",
+          "createdAt": "2024-01-22T14:37:38Z",
+          "updatedAt": "2024-01-22T14:39:38Z",
+          "comments": [
+            {
+              "originalPosition": 9,
+              "body": "This list of commands needs to be kept in sync with the files for which we generate test vectors.\r\n\r\nLuckily, I don't think this is necessary. To set the `TEST_VECTOR` variable to `true`, just do:\r\n```\r\nmake TEST_VECTOR=true\r\n```\r\n\r\n```suggestion\r\n```",
+              "createdAt": "2024-01-22T14:37:38Z",
+              "updatedAt": "2024-01-22T14:39:38Z"
+            },
+            {
+              "originalPosition": 3,
+              "body": "Remove `generate_test_vectors` from the Makefile (see above) and update these instructions.",
+              "createdAt": "2024-01-22T14:38:49Z",
+              "updatedAt": "2024-01-22T14:39:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tfsC4",
+          "commit": {
+            "abbreviatedOid": "4b20c62"
+          },
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-22T17:43:29Z",
+          "updatedAt": "2024-01-22T17:43:49Z",
+          "comments": [
+            {
+              "originalPosition": 3,
+              "body": "Done.",
+              "createdAt": "2024-01-22T17:43:29Z",
+              "updatedAt": "2024-01-22T17:43:49Z"
+            },
+            {
+              "originalPosition": 9,
+              "body": "Good point. Done.",
+              "createdAt": "2024-01-22T17:43:41Z",
+              "updatedAt": "2024-01-22T17:43:49Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tfwjv",
+          "commit": {
+            "abbreviatedOid": "8510618"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Please squash and then I'll merge.",
+          "createdAt": "2024-01-22T17:54:38Z",
+          "updatedAt": "2024-01-22T18:45:03Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tgjIk",
+          "commit": {
+            "abbreviatedOid": "8510618"
+          },
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-22T19:53:04Z",
+          "updatedAt": "2024-01-22T19:53:04Z",
           "comments": []
         }
       ]
