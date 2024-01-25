@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-23T00:44:21.365218+00:00",
+  "timestamp": "2024-01-25T00:44:20.479794+00:00",
   "repo": "cfrg/draft-irtf-cfrg-vdaf",
   "labels": [
     {
@@ -4671,7 +4671,7 @@
       "id": "I_kwDOGKuqOc53B8cg",
       "title": "Prio3: Add guidance for choosing `PROOFS` and `Flp.Field` ",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/311",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -4680,8 +4680,8 @@
       "labels": [],
       "body": "If a small field is used, then it may be necessary to use a larger number of proofs in order to achieve the desired level of robustness. (Privacy is not significantly impacted by the choice of these parameters.) The draft needs to provide some guidance for choosing this.\r\n\r\nWe may also consider re-parameterizing the existing Prio3 variants.\r\n\r\nSee #177 for initial discussion and analysis.\r\n\r\ncc/ @albertpl ",
       "createdAt": "2023-11-16T14:34:37Z",
-      "updatedAt": "2023-12-18T16:16:54Z",
-      "closedAt": null,
+      "updatedAt": "2024-01-23T21:58:41Z",
+      "closedAt": "2024-01-23T21:58:41Z",
       "comments": [
         {
           "author": "cjpatton",
@@ -4762,7 +4762,7 @@
       "id": "I_kwDOGKuqOc54FTdx",
       "title": "Consider generalizing `num_shares` in `Flp` interface",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/314",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "junyechen1996",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -4771,8 +4771,8 @@
       ],
       "body": "Under [Flp](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-08.html#name-fully-linear-proof-flp-syst) interface, the APIs contain a parameter `num_shares` which seems to be something useful in certain FLP constructions, e.g., FLPs that need to normalize a constant if it's not multiplied with a secret-shared variable. I wonder if this parameter can be more generic to tailor the need for each FLP. Some use cases that may benefit from this:\r\n\r\n- Avoid re-computation of variables that stay the same in each FLP proof in [multiproof setting](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-08.html#name-multiple-proofs). In #177  and #305 , the VDAF spec added support to allow a VDAF to run multiple proofs of its FLP to improve robustness. Inside the `eval()` function used by both `prove()` and `query()`, the FLP may compute \"some variables\" locally, which will then be fed as inputs to gadgets. Those variables don't change within each proof, so the VDAF may choose to compute those variables once, and feed them to each FLP's proof repetition to save computation time. Examples include the `sum_check` variable in [`Prio3Histogram`](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-08.html#name-prio3histogram), which only needs to be computed once, and stays the same for all FLP proof repetitions.\r\n\r\n- FLPs that prefer to sample random values from a seed directly, instead of passing the random values as field elements in `joint_rand` to `prove()` and `query()`. The benefit include: (1) if the FLP uses a large number of field elements, it may prefer to sample the field elements on the fly instead of keeping all field elements in memory. (2) If the FLP prefers to not use field elements to represent its random values, (e.g., it may only want to sample binary values), so it's more convenient for FLP to sample from a random buffer directly, e.g., by looking at the random buffer bit by bit.\r\n\r\nPerhaps we can generalize today's `num_shares` parameter to a FLP-specific struct to support these use cases? Note this won't be wire breaking to the VDAF interface, but improves the flexibility of the integration between VDAF and FLP.",
       "createdAt": "2023-11-28T15:05:32Z",
-      "updatedAt": "2023-11-28T15:47:45Z",
-      "closedAt": null,
+      "updatedAt": "2024-01-24T12:07:58Z",
+      "closedAt": "2024-01-24T12:07:58Z",
       "comments": [
         {
           "author": "cjpatton",
@@ -4780,6 +4780,13 @@
           "body": "This sounds like a useful improvement to me. I'm imagining something like an associated type for the `Valid` API. Call it something like `Context`, or `EvaluationParam`?",
           "createdAt": "2023-11-28T15:47:36Z",
           "updatedAt": "2023-11-28T15:47:36Z"
+        },
+        {
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I realized there is not enough motivation to complicate the spec with this change right now, so closing it.",
+          "createdAt": "2024-01-24T12:07:58Z",
+          "updatedAt": "2024-01-24T12:07:58Z"
         }
       ]
     },
@@ -4887,6 +4894,38 @@
       "createdAt": "2024-01-10T02:57:09Z",
       "updatedAt": "2024-01-11T19:58:23Z",
       "closedAt": "2024-01-11T19:58:23Z",
+      "comments": []
+    },
+    {
+      "number": 327,
+      "id": "I_kwDOGKuqOc589SUl",
+      "title": "Testing improvements",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/327",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "1. Adopt `unittest` for unit tests.\r\n2. Decouple test vector generation from unit tests. Requirements:\r\n     * We would like the code to set the path for the test vector (e.g., `test_vec/08`).\r\n     * Unit tests should always generate fresh randomness; for test vectors, either: (1) use the a fixed sequence of coins, as the draft suggests; or (2) publish the generated randomness with test vectors.\r\n     * We need a separate function for generating test vectors and running the VDAF.\r\n\r\ncc/ @junyechen1996 ",
+      "createdAt": "2024-01-23T16:12:11Z",
+      "updatedAt": "2024-01-23T16:13:01Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 328,
+      "id": "I_kwDOGKuqOc58_o0_",
+      "title": "Have Prio3 specify the field rather than the FLP circuit",
+      "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/328",
+      "state": "OPEN",
+      "author": "cjpatton",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "              > @divergentdave  Looks good. I think we should also add `| PROOFS | 1 |` to tables 9, 10, 11, and 12, right after `Field`, to be clear about the parameter values for the four concrete Prio3 VDAFs (and algorithm IDs) we define.\r\n\r\nThese tables specify parameters of the circuit; the number of proofs is not a parameter of the circuit. In fact, the gudance here is about modifying one of the circuits, say `SumVec` by changing the field from `Field64` to `Field128`.\r\n\r\nWhat do you think about decoupling `Field` from the circuit and moving it to the `Prio3` variant. There, `PROOFS` is (or should, at least) be specified.\r\n\r\n_Originally posted by @cjpatton in https://github.com/cfrg/draft-irtf-cfrg-vdaf/issues/325#issuecomment-1906952751_\r\n            ",
+      "createdAt": "2024-01-23T21:58:11Z",
+      "updatedAt": "2024-01-23T21:58:11Z",
+      "closedAt": null,
       "comments": []
     }
   ],
@@ -26946,25 +26985,56 @@
       "id": "PR_kwDOGKuqOc5j3SXR",
       "title": "Add guidance for choosing the field size",
       "url": "https://github.com/cfrg/draft-irtf-cfrg-vdaf/pull/325",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "cjpatton",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Closes #311.\r\n\r\nFor Prio3, when joint randomness is used:\r\n\r\n* RECOMMEND Field128\r\n* Field64 MAY be used, but `PROOFS` MUST be `3`\r\n\r\nThe latter is motivated by issue #177. The recommendation is based on the upper bound given by {{DPRS23}}, Theorem 1 and a matching attack described by @bwesterb (see issue #311).",
       "createdAt": "2024-01-11T22:13:34Z",
-      "updatedAt": "2024-01-18T19:58:43Z",
+      "updatedAt": "2024-01-23T21:58:41Z",
       "baseRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "baseRefName": "main",
-      "baseRefOid": "2c7a6817c21f618c72c16609aea03d05be0c638c",
+      "baseRefOid": "b87c2d6e2169ba2801f14f63abc24723d03c8da6",
       "headRepository": "cfrg/draft-irtf-cfrg-vdaf",
       "headRefName": "cjpatton/311-f128-to-f64",
-      "headRefOid": "fcc9f91eca6d7585dace3d29bbdfb45f9ea0ae4a",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "fffbafe6ecbea1c92cf965fbd9136273f31a1c36",
+      "closedAt": "2024-01-23T21:58:40Z",
+      "mergedAt": "2024-01-23T21:58:40Z",
+      "mergedBy": "cjpatton",
+      "mergeCommit": {
+        "oid": "041fce5c59c1d1467376f7630a082cc53f13820f"
+      },
+      "comments": [
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Approved assuming \"Connecting soundness and robustness\" is addressed either in this PR or a future one.\r\n\r\nRight, thanks for the reminder! I'll ping you for a quick review if you don't mind.",
+          "createdAt": "2024-01-23T20:32:22Z",
+          "updatedAt": "2024-01-23T20:32:22Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> @divergentdave  Looks good. I think we should also add `| PROOFS | 1 |` to tables 9, 10, 11, and 12, right after `Field`, to be clear about the parameter values for the four concrete Prio3 VDAFs (and algorithm IDs) we define.\r\n\r\nThese tables specify parameters of the circuit; the number of proofs is not a parameter of the circuit. In fact, the gudance here is about modifying one of the circuits, say `SumVec` by changing the field from `Field64` to `Field128`.\r\n\r\nWhat do you think about decoupling `Field` from the circuit and moving it to the `Prio3` variant. There, `PROOFS` is (or should, at least) be specified.",
+          "createdAt": "2024-01-23T21:31:14Z",
+          "updatedAt": "2024-01-23T21:31:14Z"
+        },
+        {
+          "author": "divergentdave",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good point, I think that sounds better",
+          "createdAt": "2024-01-23T21:34:14Z",
+          "updatedAt": "2024-01-23T21:34:14Z"
+        },
+        {
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'll lift to an issue and handle it after this PR.",
+          "createdAt": "2024-01-23T21:56:21Z",
+          "updatedAt": "2024-01-23T21:56:21Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOGKuqOc5sVhrO",
@@ -27089,15 +27159,101 @@
         {
           "id": "PRR_kwDOGKuqOc5tGqSD",
           "commit": {
-            "abbreviatedOid": "fcc9f91"
+            "abbreviatedOid": "609fcae"
           },
           "author": "divergentdave",
           "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "Looks good. I think we should also add `| PROOFS | 1 |` to tables 9, 10, 11, and 12, right after `Field`, to be clear about the parameter values for the four concrete Prio3 VDAFs (and algorithm IDs) we define.",
           "createdAt": "2024-01-18T19:58:43Z",
-          "updatedAt": "2024-01-18T19:58:43Z",
+          "updatedAt": "2024-01-23T21:19:00Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tmooC",
+          "commit": {
+            "abbreviatedOid": "609fcae"
+          },
+          "author": "junyechen1996",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-01-23T13:51:03Z",
+          "updatedAt": "2024-01-23T21:19:00Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5toRlm",
+          "commit": {
+            "abbreviatedOid": "fcc9f91"
+          },
+          "author": "wangshan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-23T16:30:39Z",
+          "updatedAt": "2024-01-23T16:30:40Z",
+          "comments": [
+            {
+              "originalPosition": 78,
+              "body": "2 proofs for Field64.\r\nThere were many discussions in issues for robustness analysis, especially 2 proofs vs 3. Would be good to tell reader what are the risks involved using PROOFS == 2. So we can justify why \"`PROOFS` MUST be set to at least `3`\", instead of \"SHOULD be\"",
+              "createdAt": "2024-01-23T16:30:40Z",
+              "updatedAt": "2024-01-23T16:30:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tqD_K",
+          "commit": {
+            "abbreviatedOid": "fcc9f91"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-23T19:20:06Z",
+          "updatedAt": "2024-01-23T19:20:06Z",
+          "comments": [
+            {
+              "originalPosition": 78,
+              "body": "Below we say \"breaking robustness for `PROOFS == 2` is feasible, if impractical\".\r\n\r\nI mean to use the terms \"feasible\" and \"impractical\" the way they are generally meant in the crypto literature:  An attack is \"feasilbe' if it can be pulled off, given enough resources. However the amount of resources it takes to pull off means we may not see the attack happen in practice (costs too much money, too much memory, or too much time). ",
+              "createdAt": "2024-01-23T19:20:06Z",
+              "updatedAt": "2024-01-23T19:20:06Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tqfXz",
+          "commit": {
+            "abbreviatedOid": "609fcae"
+          },
+          "author": "wangshan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Approved assuming \"Connecting soundness and robustness\" is addressed either in this PR or a future one.",
+          "createdAt": "2024-01-23T20:24:02Z",
+          "updatedAt": "2024-01-23T21:19:00Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOGKuqOc5tq5m5",
+          "commit": {
+            "abbreviatedOid": "609fcae"
+          },
+          "author": "cjpatton",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-01-23T21:26:48Z",
+          "updatedAt": "2024-01-23T21:26:48Z",
+          "comments": [
+            {
+              "originalPosition": 78,
+              "body": "Added note about robustness versus soundness.",
+              "createdAt": "2024-01-23T21:26:48Z",
+              "updatedAt": "2024-01-23T21:26:48Z"
+            }
+          ]
         }
       ]
     },
