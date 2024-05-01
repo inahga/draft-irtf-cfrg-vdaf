@@ -536,12 +536,16 @@ class Prio3SumVecWithMultiproof(Prio3SumVec):
                     bits: Unsigned,
                     chunk_length: Unsigned,
                     num_proofs: Unsigned,
-                    field: FftField):
+                    field: FftField,
+                    test_vec_nam: str):
         valid_cls = flp_generic.SumVec.with_field(field)
         if not cls.is_recommended(valid_cls, num_proofs, field):
             raise ValueError("parameters not recommended")
 
         class Prio3SumVecWithMultiproofAndParams(cls):
+            # Operational parameters.
+            test_vec_name = test_vec_nam
+
             # Associated parameters.
             ID = 0xFFFFFFFF
             PROOFS = num_proofs

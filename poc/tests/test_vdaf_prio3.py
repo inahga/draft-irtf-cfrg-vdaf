@@ -31,13 +31,16 @@ class TestPrio3Average(Prio3):
         return TestPrio3AverageWithBits
 
 
-def test_prio3sumvec(num_proofs: Unsigned, field: FftField):
+def test_prio3sumvecmultiproof(num_proofs: Unsigned,
+                               field: FftField,
+                               test_vec_name: str = "Prio3SumVecWithMultiproof",
+                               print_test_vec: bool = False):
     valid_cls = SumVec.with_field(field)
     assert Prio3SumVecWithMultiproof.is_recommended(
         valid_cls, num_proofs, field)
 
     cls = Prio3SumVecWithMultiproof \
-        .with_params(10, 8, 9, num_proofs, field) \
+        .with_params(10, 8, 9, num_proofs, field, test_vec_name) \
         .with_shares(2)
 
     assert cls.ID == 0xFFFFFFFF
@@ -58,9 +61,13 @@ def test_prio3sumvec(num_proofs: Unsigned, field: FftField):
             [255] * 10
         ],
         list(range(256, 266)),
-        print_test_vec=False,
+        print_test_vec=print_test_vec,
+        test_vec_instance=0,
     )
-    cls = Prio3SumVec.with_params(3, 16, 7).with_shares(3)
+
+    cls = Prio3SumVecWithMultiproof \
+        .with_params(3, 16, 7, num_proofs, field, test_vec_name) \
+        .with_shares(3)
     test_vdaf(
         cls,
         None,
@@ -70,7 +77,7 @@ def test_prio3sumvec(num_proofs: Unsigned, field: FftField):
             [15986, 24671, 23910]
         ],
         [45328, 76286, 26980],
-        print_test_vec=False,
+        print_test_vec=print_test_vec,
         test_vec_instance=1,
     )
 
@@ -213,4 +220,11 @@ class TestPrio3(unittest.TestCase):
 
     def test_multiproof(self):
         for n in range(2, 5):
-            test_prio3sumvec(num_proofs=n, field=Field64)
+            test_prio3sumvecmultiproof(num_proofs=n, field=Field64)
+
+        test_prio3sumvecmultiproof(
+            num_proofs=3,
+            field=Field64,
+            test_vec_name="Prio3SumVecField64Multiproof",
+            print_test_vec=TEST_VECTOR
+        )
