@@ -4577,7 +4577,7 @@ Client be used by the Aggregators for replay protection.
 ## Requirements for the Public Share
 
 The Aggregators MUST verify that have both received the same public share from
-the Client. It is sufficient, for example, to exchange a hash of the pubic
+the Client. It is sufficient, for example, to exchange a hash of the public
 share over a secure channel.
 
 ## Requirements for Aggregation Parameters
